@@ -1,6 +1,6 @@
 # position_magnitude
 
-First, clone this repo to your local machine. In a Terminal, navigate to the repo and within it, run the follwing Docker command:
+First, clone this repo to your local machine. In a Terminal, navigate to the repo and within it, run the following Docker command:
 
 `docker build -t position_magnitude .`
 

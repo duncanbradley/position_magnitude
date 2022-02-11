@@ -3,8 +3,8 @@ title: 'Top of the Charts: The Influence of Position and Axis Range on Perceived
 author: "Duncan Bradley"
 date: "14/02/2022"
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 bibliography: references.bib
 ---
@@ -15,18 +15,17 @@ set.seed(45789)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 # Loading packages
-library(papaja)
-library(tidyverse)
+library(papaja) 
+library(tidyverse) 
 library(zoo)
-library(ordinal)
+library(ordinal) 
 library(patchwork)
-library(magick)
-library(emmeans)
-library(egg)
-library(scales)
-library(buildmer)
+library(magick) 
+library(emmeans) 
+library(egg) 
+library(scales) 
+library(buildmer) 
 library(lme4)
-library(broom)
 ```
 
 ```{r load-data, include=FALSE}
@@ -231,7 +230,7 @@ anova_results <- function(model, cmpr_model) {
 Context is crucial for effectively judging the magnitude of numbers. It is indisputable that a 40% probability is twice as great as a 20% probability, but in the absence of context, it is unclear whether this value should be considered large or small.
 
 ```{r nyt-chart, fig.cap= "New York Times Data Visualisation", echo=FALSE}
-knitr::include_graphics("nyt-chart.png")
+knitr::include_graphics("figures/nyt-chart.png")
 ```
 
 In charts, numerical axes often provide some context for judging the magnitude of plotted values. The range of values on an axis provides a frame of reference for assessing whether a data point is large or small. A bar chart produced by the New York Times, which plots over time the number of black members of the U.S. senate, provides a striking illustration (Figure \@ref(fig:nyt-chart)). Unusually, the continuous y-axis does not terminate just above the highest value. Instead, it extends all the way to the total number of senators: 100. As a result, bars representing black senators are constrained to the very bottom, visible just above the x-axis, and a significant expanse of blank space looms above them. This highlights the absent data points: the vast majority of senators who are not black. The contrast communicates the magnitude of the plotted values in context. 
@@ -307,8 +306,8 @@ Text and an accompanying chart were presented in each trial. Two sentences outli
 Each dot plot displayed the probability (as a percentage) of a negative outcome occurring, for three options associated with the scenario (Figure \@ref(fig:example-charts)). The label 'Chance' was used instead of 'Probability' to avoid confusion with the standard 0-1 scale for probabilities, and to reflect casual usage.
 
 ```{r example-charts, fig.cap= "Example Charts", echo=FALSE}
-img1 <- image_read("E23_hi.png")
-img2 <- image_read("E23_lo.png")
+img1 <- image_read("figures/E23_hi.png")
+img2 <- image_read("figures/E23_lo.png")
 image_append(c(img1, img2))
 ```
 
@@ -325,7 +324,7 @@ Two responses were required for each trial: one rating for the probability of th
 Each Likert scale had two anchors at the extremes, but all other options were unlabelled. The leftmost option in the 'probability' Likert scale was *'Very unlikely'* and the rightmost option *'Very likely'*. The leftmost option in the 'severity' Likert scale was *'Very mild'* and the rightmost option *'Very severe'*. Likert scales appeared on the same screen as the text and chart (see Figure \@ref(fig:example-trial)). Participants were permitted to change their responses as many times as they wished before proceeding to the next trial, but could not return to previous trials.
 
 ```{r example-trial, fig.cap= "Example Trial", echo=FALSE}
-knitr::include_graphics("example_trial.png")
+knitr::include_graphics("figures/example_trial.png")
 ```
 
 Attention check trials (n = 5) followed the same layout, with text, a chart, and Likert scales, but the task differed. Participants were instructed not to attend to the chart, and instead to provide specified responses on the Likert scales. For example:

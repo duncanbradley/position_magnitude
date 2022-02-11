@@ -18,6 +18,7 @@ RUN R -e "devtools::install_version('patchwork', version = '1.1.1', dependencies
 RUN R -e "devtools::install_version('magick', version = '2.7.3', dependencies = T)"
 RUN R -e "devtools::install_version('egg', version = '0.4.5', dependencies = T)"
 RUN R -e "devtools::install_version('scales', version = '1.1.1', dependencies = T)"
+RUN R -e "devtools::install_github('crsh/papaja')"
 
 
 

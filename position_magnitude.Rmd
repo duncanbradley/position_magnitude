@@ -18,7 +18,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 library(papaja)
 library(tidyverse)
 library(zoo)
-library(wesanderson)
 library(ordinal)
 library(patchwork)
 library(magick)
@@ -31,9 +30,9 @@ library(broom)
 ```
 
 ```{r load-data, include=FALSE}
-risk1_anon <- read_csv("risk1_anon.csv")
-risk2_anon <- read_csv("risk2_anon.csv")
-risk3_anon <- read_csv("risk3_anon.csv")
+risk1_anon <- read_csv("data/risk1_anon.csv")
+risk2_anon <- read_csv("data/risk2_anon.csv")
+risk3_anon <- read_csv("data/risk3_anon.csv")
 ```
 
 ```{r wrangle, include=FALSE}

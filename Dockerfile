@@ -1,8 +1,9 @@
-#FROM rocker/rstudio:4.1.2
 FROM rocker/verse:4.1.2
 
 ADD data/ /home/rstudio/data/
+ADD figures/ /home/rstudio/figures/
 ADD position_magnitude.Rmd /home/rstudio/
+ADD position_magnitude.Rproj /home/rstudio/
 
 RUN R -e "install.packages('devtools')"
 
@@ -20,5 +21,4 @@ RUN R -e "devtools::install_version('scales', version = '1.1.1', dependencies = 
 
 
 
-#ADD script/plot_my_data.R /home/rstudio/script/
-#ADD script_data_docker_demo.Rproj /home/rstudio/
+

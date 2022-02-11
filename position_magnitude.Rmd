@@ -17,7 +17,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 # Loading packages
 library(papaja) 
 library(tidyverse) 
-library(zoo)
 library(ordinal) 
 library(patchwork)
 library(magick) 
@@ -26,6 +25,7 @@ library(egg)
 library(scales) 
 library(buildmer) 
 library(lme4)
+library(broom)
 ```
 
 ```{r load-data, include=FALSE}

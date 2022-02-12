@@ -3,8 +3,8 @@ title: 'Top of the Charts: The Influence of Position and Axis Range on Perceived
 author: "Duncan Bradley, Gabriel Strain, Caroline Jay, Andrew Stewart"
 date: "14/02/2022"
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 
@@ -759,7 +759,7 @@ There was no significant difference between ratings for data points plotted at d
 
 Data points plotted at high physical positions were associated with higher ratings when a conventional axis was used than when an inverted axis was used (`r printnum(r2_p_contrast.h.z.ratio)`, p `printp(r2_p_contrast.h.p.value, add_equals = TRUE)`). However, data points plotted at low physical positions were not associated with different ratings depending on the axis orientation (`r printnum(r2_p_contrast.l.z.ratio)`, p `printp(r2_p_contrast.l.p.value, add_equals = TRUE)`.
 
-This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. This interaction also remained when controlling for participants' graph literacy scores: z = `r printnum(r2_pl.statistic)`, p `r printp(r2_pl.p.value, add_equals = TRUE).`
+This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. This interaction also remained when controlling for participants' graph literacy scores: z = r printnum(r2_pl.statistic), p r printp(r2_pl.p.value, add_equals = TRUE).`
 
 ```{r r2-s, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r2_s <- buildclmm(severity_slider.response ~ pos*ori +

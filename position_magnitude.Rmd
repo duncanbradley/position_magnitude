@@ -285,16 +285,16 @@ age_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean
 
 gender_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
 
-literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy, na.rm = TRUE), sd = sd(literacy, na.rm = TRUE))
+literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
 ```
 
-A total of 161 participants were recruited through Prolific.co, a platform for recruiting participants for online studies. Normal or corrected-to-normal vision and English fluency were required for participation. Per pre-registered rejection criteria[^1], 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly[^2], and one participant's submission was rejected because they did not complete the experiment, so no data were available for this participant. This left a total of 150 participants whose submissions were accepted (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^3]. Graph literacy scores consisted of the sum of responses on five six-point scales. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`). Participants whose submissions were approved were paid £3.55.
+The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. Normal or corrected-to-normal vision and English fluency were required for participation. Data were returned by 160 participants. Per pre-registered rejection criteria[^1], 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly[^2]. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^3]. Graph literacy scores consisted of the sum of responses on five six-point scales. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`). Participants whose submissions were approved were paid £3.55.
 
 [^1]: <https://osf.io/23wpn>
 
 [^2]: Attention check questions are described in the Procedure.
 
-[^3]: Age data failed to save for one participant, but was available for all other 149 participants whose submissions were accepted.
+[^3]: Age data failed to save for one participant, but was available for all other 149 participants in the dataset.
 
 ### Materials
 
@@ -342,7 +342,7 @@ Before exiting the experiment, participants were informed that all data presente
 
 The experiment used a within-participants design, with each participant responding to both versions of each chart. The independent variable, vertical position, had two levels: *high* (data points presented in the upper third) and *low* (data points presented in the lower third). In each trial, responses for the two dependent variables were elicited: participants rated the probability and severity of the negative event on seven-point Likert scales.
 
-Materials were divided into two lists. One list contained five experimental items in the high condition, five experimental items in the low condition, eight filler items, and two attention check questions. The other list contained the alternate versions of each of the experimental items, seven different filler items, and three different attention check questions. The order of the two lists was counterbalanced across participants, and within each list, items were presented in a random order.
+Materials were divided into two lists. One list contained five experimental items in the 'high' condition, five experimental items in the 'low' condition, eight filler items, and two attention check questions. The other list contained the alternate versions of each of the experimental items, seven different filler items, and three different attention check questions. The order of the two lists was counterbalanced across participants, and within each list, items were presented in a random order.
 
 ## Analysis
 
@@ -610,19 +610,23 @@ We employed a Latin-squared design: each combination of position and axis orient
 
 ### Materials
 
-To provide some compensation for the reduced experimental power caused by a reduction in participant numbers, and a shift from a repeated-measures to a Latin-squared design (reducing the number of observations per participant), we increased the number of experimental items for this experiment. Three scenarios which were fillers in E1 were used as experimental items, and one extra item was added for use as an experimental item, and one filler item was replaced due to concerns about its quality (it concerned the risk to others as well as the risk to oneself). The sampling mean of the data was changed for X items in order to present more realistic datasets. E2 used a total of 24 experiment items, 12 filler items and 5 attention check questions (41 trials total).
+To provide some compensation for the reduced experimental power caused by a reduction in participant numbers, and a shift from a repeated-measures to a Latin-squared design (reducing the number of observations per participant), we increased the number of experimental items for this experiment. Two scenarios which were fillers in E1 were used as experimental items, three extra scenarios were added for use as experimental items, and one filler item was removed due to concerns about its quality (it concerned the risk to others as well as the risk to oneself). The sampling mean of the data was changed for X items in order to present more realistic datasets. E2 used a total of 24 experiment items, 12 filler items and 5 attention check questions (41 trials total).
 
-Write a script to check this number
+```{r r2_demographics, echo=FALSE}
+age_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text), sd = sd(age_textbox.text)) 
+
+gender_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
+
+edu_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% group_by(edu_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% filter(edu_slider.response != 'No formal qualications' & edu_slider.response != 'Don\'t know / not applicable') %>% tally(perc)
+
+literacy_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+```
 
 ### Participants
 
-120 participants
+The experiment was not made available on Prolific.co to those who had participated in E1, or those who signed-up to prolific.co prior to 24th July 2021. A viral social media post on 24th July 2021 endorsing the website attracted many new users from a narrow demographic, skewing studies' participant distributions (Prolific, 2021). Normal or corrected-to-normal vision and English fluency were required for participation.
 
-demographic info
-
-exclusions
-
-Due to experimenter error, data from one participant was collected prior to pre-registration. These data are not included in the analysis.
+Data were returned by 129 participants. Per pre-registered rejection criteria (footnote), five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded the final dataset for the follow reasons: data were collected prior to pre-registration (one participant); maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37.
 
 ### Procedure
 
@@ -783,7 +787,7 @@ r2_s_contrast <- contrast(r2_s_emm, "consec", simple = "each", combine = TRUE, a
 invisible(do.call(mapply, c(get_contrasts, unname(id))))
 ```
 
-There was also an interaction between physical position and axis orientation for severity magnitude ratings: (\chi\^2)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scoares as a covariate did not eliminate this interaction: Severity: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
+There was also an interaction between physical position and axis orientation for severity magnitude ratings: (\chi\^2)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as a covariate did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
 
 ```{r r2-pl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-p"}
 r2_pl <- clmm(add.terms(formula(r2_p), "literacy"),
@@ -827,15 +831,25 @@ Therefore, it is appropriate to test, in an experiment with increased experiment
 
 ### Materials
 
-Materials were identical to E1, except for the inversion of the y-axis in all charts, including practice items. There were 60 trials in total (40 experimental, 15 fillers, 5 attention check questions). Did the item that changed in E2 also change here?
+Materials were identical to E1, except for the inversion of the y-axis in all charts, including practice items. There were 60 trials in total (40 experimental items, 15 fillers, 5 attention check questions).
+
+```{r r3_demographics, echo=FALSE}
+age_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text, na.rm = TRUE), sd = sd(age_textbox.text, na.rm = TRUE)) 
+
+gender_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
+
+edu_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% group_by(edu_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% filter(edu_slider.response != 'No formal qualications' & edu_slider.response != 'Don\'t know / not applicable') %>% tally(perc)
+
+literacy_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+```
 
 ### Participants
 
-How many people participated in total?
+The experiment was not made available on Prolific.co to those who had participated in E1 or E2, or those who signed-up to prolific.co prior to 24th July 2021, for reasons outlined in E2. Normal or corrected-to-normal vision and English fluency were required for participation.
 
-What were the entire elimiation criteria on pre-reg?
+Data were returned by 161 participants. Per pre-registered rejection criteria (footnote), 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were accepted and used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^4]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45.
 
-The experiment was not made available to those who had participated in Experiments 1 and 2 or those who signed-up to prolific.co prior to 24th July 2021. A viral social media post on 24th July 2021 endorsing the website attracted many new users from a narrow demographic, skewing studies' participant distributions (Prolific, 2021).
+[^4]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
 
 ### Procedure
 

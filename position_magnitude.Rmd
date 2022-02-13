@@ -3,8 +3,8 @@ title: 'Top of the Charts: The Influence of Position and Axis Range on Perceived
 author: "Duncan Bradley, Gabriel Strain, Caroline Jay, Andrew Stewart"
 date: "14/02/2022"
 output:
-  html_document: default
   word_document: default
+  html_document: default
   pdf_document: default
 ---
 
@@ -274,7 +274,7 @@ Risk events are comprised of two core components: 1) probability of occurrence a
 
 Our initial experiment attempts to establish whether changing the axes limits in a chart does indeed affect interpretations of the magnitude of data points. We presented the same data points at different vertical positions by altering both the upper and lower y-axis limits.
 
-We predicted that probability magnitude ratings and/or severity magnitude ratings would be greater when data points were presented at higher positions, compared to when the same data points were presented at lower positions.
+We predicted that probability magnitude ratings and/or severity magnitude ratings would be greater when data points were presented at higher positions, compared to when the same data points were presented at lower positions. Pre-registration of this hypothesis, and planned analyses is available at https://osf.io/23wpn
 
 ## Methods
 
@@ -288,7 +288,7 @@ gender_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% group_by(ge
 literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
 ```
 
-The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. Normal or corrected-to-normal vision and English fluency were required for participation. Data were returned by 160 participants. Per pre-registered rejection criteria[^1], 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly[^2]. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^3]. Graph literacy scores consisted of the sum of responses on five six-point scales. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`). Participants whose submissions were approved were paid £3.55.
+The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. Normal or corrected-to-normal vision and English fluency were required for participation. Data were returned by 160 participants. Per pre-registered rejection criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly[^2]. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^3]. Graph literacy scores consisted of the sum of responses on five six-point scales. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`). Participants whose submissions were approved were paid £3.55.
 
 [^1]: <https://osf.io/23wpn>
 
@@ -600,7 +600,7 @@ ghc +  ggtitle('Conventional') + ylab("HIGH\nPhysical Position\n\n") +
 
 Research suggests charts with inverted axes are prone to misinterpretation. Risch (2008) argues that comprehension of data visualisations is facilitated when data is plotted in a manner consistent with common visual metaphors (where greater amounts are associated with higher vertical positions). In an empirical study, 96% of participants correctly interpreted the pattern of data in line charts with conventional y-axis orientation, compared to just 18% for line charts with inverted y-axes (Pandey et al., 2015). This finding of increased misinterpretation for inverted charts was conceptually replicated by Woodin et al. (2021). In both studies, participants were not informed that they were viewing inverted charts, in this study they are given explicit instruction.
 
-Predictions from pre-registrations
+Pre-registration of hypotheses and planned analyses is available at https://osf.io/zhe7q. For charts with conventional axis orientations, we predicted that data points presented at higher physical positions would be associated with higher probability and severity ratings, compared to data points presented at lower physical positions. For charts with inverted axis orientations, we outlined what different patterns of magnitude ratings would signal about the mechanisms used to interpret magnitude. Use of absolute position would be indicated by higher magnitude ratings for data points at higher physical positions, whereas use of relative position would be indicated by higher magnitude ratings for data points at lower physical positions. Our primary concern, expressed in the 'Analyses' section of the pre-registration, was whether the difference in responses to data points at distinct positions, differed depending on whether those positions were associated with greater or smaller magnitudes in the context of the chart.
 
 ## Method
 
@@ -753,13 +753,24 @@ r2_p_contrast <- contrast(r2_p_emm, "consec", simple = "each", combine = TRUE, a
 invisible(do.call(mapply, c(get_contrasts, unname(id))))
 ```
 
+```{r r2-pl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-p"}
+r2_pl <- clmm(add.terms(formula(r2_p), "literacy"),
+              data = risk2_tidy)
+```
+
+```{r r2-pl-summary, echo=FALSE, include=FALSE}
+summary_extract(r2_pl, "pos1:ori1")
+```
+
 Pairwise comparisons (with Sidak adjustment) reveal that the main effect of position in charts with conventional y-axis orientations (E1) is replicated (z = `r printnum(r2_p_contrast.c.z.ratio)`, p `printp(r2_p_contrast.c.p.value, add_equals = TRUE)`). Data points at higher positions were associated with higher probability ratings than data points at lower positions.
 
 There was no significant difference between ratings for data points plotted at different positions when inverted axes were used (`r printnum(r2_p_contrast.i.z.ratio)`, p `printp(r2_p_contrast.i.p.value, add_equals = TRUE)`). We do not observe the same pattern of results when an inverted axis is used instead of a conventional axis.
 
 Data points plotted at high physical positions were associated with higher ratings when a conventional axis was used than when an inverted axis was used (`r printnum(r2_p_contrast.h.z.ratio)`, p `printp(r2_p_contrast.h.p.value, add_equals = TRUE)`). However, data points plotted at low physical positions were not associated with different ratings depending on the axis orientation (`r printnum(r2_p_contrast.l.z.ratio)`, p `printp(r2_p_contrast.l.p.value, add_equals = TRUE)`.
 
-This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. This interaction also remained when controlling for participants' graph literacy scores: z = r printnum(r2_pl.statistic), p r printp(r2_pl.p.value, add_equals = TRUE).`
+This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. This interaction also remained when controlling for participants' graph literacy scores: z = `r printnum(r2_pl.statistic)`, p `r printp(r2_pl.p.value, add_equals = TRUE)`.[^4]
+
+[^4]: This represents a divergence from pre-registered analysis protocol. We tested whether controlling for participants' graph literacy scores would change whether effect(s) resulted from the manipulation, rather than testing for an interaction between the effect(s) and graph literacy scores literacy.
 
 ```{r r2-s, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r2_s <- buildclmm(severity_slider.response ~ pos*ori +
@@ -787,27 +798,18 @@ r2_s_contrast <- contrast(r2_s_emm, "consec", simple = "each", combine = TRUE, a
 invisible(do.call(mapply, c(get_contrasts, unname(id))))
 ```
 
-There was also an interaction between physical position and axis orientation for severity magnitude ratings: (\chi\^2)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as a covariate did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
-
-```{r r2-pl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-p"}
-r2_pl <- clmm(add.terms(formula(r2_p), "literacy"),
-              data = risk2_tidy)
-```
-
 ```{r r2-sl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-s"}
 r2_sl <- clmm(add.terms(formula(r2_s), "literacy"),
               data = risk2_tidy)
-```
-
-```{r r2-pl-summary, echo=FALSE, include=FALSE}
-summary_extract(r2_pl, "pos1:ori1")
 ```
 
 ```{r r2-sl-summary, echo=FALSE, include=FALSE}
 summary_extract(r2_sl, "ori1:pos1")
 ```
 
-This represents a divergence from pre-registered analysis protocol, to match the simpler moderation/covariate use of literacy in E1.
+There was also an interaction between physical position and axis orientation for severity magnitude ratings: (\chi\^2)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as a covariate did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.[^5]
+
+[^5]: See Footnote \[4\]
 
 ## Discussion
 
@@ -826,6 +828,8 @@ The significant interaction in E2 revealed that the influence of position on mag
 It is possible that no significant effect was detected due to insufficient experimental power. Unlike E1 with 150 participants in repeated-measures single-factor design, E2 involved 120 participants in a Latin-squared 2x2 design. Despite an increase in the number of experimental items (from 20 to 24), there were still fewer observations for each unique condition (3000 in E1 vs. 720 in E2).
 
 Therefore, it is appropriate to test, in an experiment with increased experimental power, whether magnitude is interpreted differently for the same data points at different positions in inverted charts. This will provide a clearer account of the true nature of the interaction in E2, furthering understanding of the mechanism which causes interpretations of magnitude to be affected by data points positions.
+
+In our pre-registered hypotheses (https://osf.io/t4snu), we outlined what different patterns of magnitude ratings would signal about the mechanisms used to interpret magnitude. Use of absolute position would be indicated by higher magnitude ratings for data points at higher physical positions, whereas use of relative position would be indicated by higher magnitude ratings for data points at lower physical positions.
 
 ## Method
 
@@ -847,9 +851,9 @@ literacy_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise
 
 The experiment was not made available on Prolific.co to those who had participated in E1 or E2, or those who signed-up to prolific.co prior to 24th July 2021, for reasons outlined in E2. Normal or corrected-to-normal vision and English fluency were required for participation.
 
-Data were returned by 161 participants. Per pre-registered rejection criteria (footnote), 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were accepted and used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^4]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45.
+Data were returned by 161 participants. Per pre-registered rejection criteria (footnote), 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were accepted and used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^6]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45.
 
-[^4]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
+[^6]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
 
 ### Procedure
 
@@ -883,7 +887,18 @@ r3_p_cmpr <- clmm(comparison(r3_p),
 anova_results(r3_p, r3_p_cmpr)
 ```
 
-A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: (\chi\^2)(`r in_paren(r3_p.df)`) = `r printnum(r3_p.LR)`, p `r printp(r3_p.p, add_equals = TRUE)`. Ratings were higher, on average, for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_pl.statistic)`, p `r printp(r3_pl.p.value, add_equals = TRUE)`).
+```{r r3-pl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r3-p"}
+r3_pl <- clmm(add.terms(formula(r3_p), "literacy"),
+              data = risk3_tidy)
+```
+
+```{r r3-pl-summary, echo=FALSE, include=FALSE}
+summary_extract(r3_pl, "condition1")
+```
+
+A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: (\chi\^2)(`r in_paren(r3_p.df)`) = `r printnum(r3_p.LR)`, p `r printp(r3_p.p, add_equals = TRUE)`. Ratings were higher, on average, for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_pl.statistic)`, p `r printp(r3_pl.p.value, add_equals = TRUE)`).[^7]
+
+[^7]: See Footnote \[4\]
 
 ```{r r3-s, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r3_s <- buildclmm(severity_slider.response ~ condition + 
@@ -901,25 +916,18 @@ r3_s_cmpr <- clmm(comparison(r3_s),
 anova_results(r3_s, r3_s_cmpr)
 ```
 
-There was insufficient evidence for difference between severity magnitude ratings in inverted charts: (\chi\^2)(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`)
-
-```{r r3-pl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r3-p"}
-r3_pl <- clmm(add.terms(formula(r3_p), "literacy"),
-              data = risk3_tidy)
-```
-
 ```{r r3-sl, cache=TRUE, cache.path="cache/", eval=TRUE, echo=FALSE, warning=FALSE, dependson="r3-s"}
 r3_sl <- clmm(add.terms(formula(r3_s), "literacy"),
               data = risk3_tidy)
 ```
 
-```{r r3-pl-summary, echo=FALSE, include=FALSE}
-summary_extract(r3_pl, "condition1")
-```
-
 ```{r r3-sl-summary, echo=FALSE, include=FALSE}
 summary_extract(r3_sl, "condition1")
 ```
+
+There was insufficient evidence for difference between severity magnitude ratings in inverted charts: (\chi\^2)(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`).[^8]
+
+[^8]: See \[4\]
 
 ## Discussion
 
@@ -934,7 +942,7 @@ r3_p_emm.l <- r3_p_emm %>% filter(condition == "lo") %>% pull(emmean)
 
 In the previous experiment (E2), we did not observe a significant difference between magnitude ratings for data points at different positions, for inverted graphs. We suggested that insufficient experimental power to detect this difference in E2, may have resulted in a false negative. However, increased power in E3 provides greater confidence in a genuine significant effect.
 
-E2 involved switching between conventional and inverted charts, whereas E3 presented inverted charts in isolation. However, estimated marginal means, which capture the difference in ratings for values at different positions, are almost identical across these two experiments (E2: `r printnum(abs(r2_p_emm.hi-r2_p_emm.li))`; E3: `r printnum(abs(r3_p_emm.h-r3_p_emm.l))`), suggesting these charts were not treated differently in the different experiments. Therefore, switching should not prohibit the use of E3's data to reinterpret the interaction in E2
+E2 involved switching between conventional and inverted charts, whereas E3 presented inverted charts in isolation. However, estimated marginal means, which capture the difference in ratings for values at different positions, are almost identical across these two experiments (E2: `r printnum(abs(r2_p_emm.hi-r2_p_emm.li))`; E3: `r printnum(abs(r3_p_emm.h-r3_p_emm.l))`), suggesting these charts were not treated differently in the different experiments. Therefore, switching should not prohibit the use of E3's data to re-interpret the interaction in E2.
 
 In light of this, we can re-interpret the significant interaction in E2. The same data points, presented at the same positions in a chart, will convey different magnitudes depending on how they compare to plausible values implied by blank space. Viewers do not draw upon simple associations between vertical position and magnitude, but recognise the context in which values are plotted.
 

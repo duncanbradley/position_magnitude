@@ -985,3 +985,5 @@ In addition to associations between vertical position and magnitude, a common co
 In analyses employing graph literacy as a covariate, graph literacy scores were calculated as the average of five Likert scale responses. This means that responses to graph literacy questions were modelled as continuous data, whilst Likert scale responses to the probability and severity questions were modelled as ordinal data,. This approach was used by the scale's developers (Garcia-Retamero et al., 2016), but is unlikely to be the most appropriate method.
 
 ## Conclusion
+
+The physical positioning of plotted data points in a chart affects interpretation of how big or small their values are. We demonstrate that this relationship between physical position and inferences about magnitude depends on whether accompanying blank space represents higher or lower alternatives to the plotted data. Users take into account the context in which data appears, even when comparison values are not explicitly displayed. Axis limits and blank space warrant consideration from data visualisation practitioners. 

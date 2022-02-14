@@ -1,5 +1,6 @@
 FROM rocker/verse:4.1.2
 
+ADD cache/ /home/rstudio/cache/
 ADD data/ /home/rstudio/data/
 ADD figures/ /home/rstudio/figures/
 ADD position_magnitude.Rmd /home/rstudio/
@@ -19,6 +20,6 @@ RUN R -e "devtools::install_version('egg', version = '0.4.5', dependencies = T)"
 RUN R -e "devtools::install_version('scales', version = '1.1.1', dependencies = T)"
 RUN R -e "devtools::install_github('crsh/papaja')"
 
-
+ADD test.Rmd /home/rstudio
 
 

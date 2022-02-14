@@ -20,6 +20,6 @@ RUN R -e "devtools::install_version('egg', version = '0.4.5', dependencies = T)"
 RUN R -e "devtools::install_version('scales', version = '1.1.1', dependencies = T)"
 RUN R -e "devtools::install_github('crsh/papaja')"
 
-
+ADD test.Rmd /home/rstudio
 
 

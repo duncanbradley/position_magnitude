@@ -1,5 +1,6 @@
 FROM rocker/verse:4.1.2
 
+ADD cache/ /home/rstudio/cache/
 ADD data/ /home/rstudio/data/
 ADD figures/ /home/rstudio/figures/
 ADD position_magnitude.Rmd /home/rstudio/

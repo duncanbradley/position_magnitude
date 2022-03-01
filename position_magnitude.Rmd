@@ -49,6 +49,11 @@ library(buildmer)
 library(lme4)
 library(broom)
 library(insight)
+library(qwraps2)
+```
+
+```{r lazy-load-models, echo=FALSE}
+lazyload_cache_dir('position_magnitude_cache/latex')
 ```
 
 ```{r load-data, include=FALSE}

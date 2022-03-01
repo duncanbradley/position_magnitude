@@ -2,11 +2,13 @@ FROM rocker/verse:4.1.2
 
 # Add files to container
 
-ADD cache/ /home/rstudio/cache/
 ADD data/ /home/rstudio/data/
 ADD figures/ /home/rstudio/figures/
 ADD position_magnitude.Rmd /home/rstudio/
 ADD position_magnitude.Rproj /home/rstudio/
+ADD position_magnitude_cache/ /home/rstudio/position_magnitude_cache/
+
+RUN chmod -R 777 /home/rstudio/position_magnitude_cache/
 
 # Add required R packages to container
 
@@ -22,6 +24,8 @@ RUN R -e "devtools::install_version('patchwork', version = '1.1.1', dependencies
 RUN R -e "devtools::install_version('magick', version = '2.7.3', dependencies = T)"
 RUN R -e "devtools::install_version('egg', version = '0.4.5', dependencies = T)"
 RUN R -e "devtools::install_version('scales', version = '1.1.1', dependencies = T)"
+RUN R -e "devtools::install_version('insight', version = '0.15.0', dependencies = T)"
+RUN R -e "devtools::install_version('bookdown', version = '0.24', dependencies = T)"
 RUN R -e "devtools::install_github('crsh/papaja')"
 
 # Add TeX Live to container to allow easy building of PDF
@@ -73,3 +77,8 @@ RUN tlmgr install pdflscape
 RUN tlmgr install xcolor
 RUN tlmgr install tools
 RUN tlmgr install babel
+
+
+ADD position_magnitude_cache/ /home/rstudio/position_magnitude_cache/
+RUN chmod -R 777 /home/rstudio/position_magnitude_cache/
+

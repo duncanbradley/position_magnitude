@@ -31,6 +31,12 @@ editor_options:
 bibliography: template.bib
 ---
 
+```{r}
+library(qwraps2)
+lazyload_cache_dir('position_magnitude_cache/latex')
+```
+
+
 ```{r setup, include=FALSE}
 set.seed(45789) # seed for random number generation
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed) # Discard cache when random seed changes

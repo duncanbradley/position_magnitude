@@ -73,3 +73,5 @@ RUN tlmgr install pdflscape
 RUN tlmgr install xcolor
 RUN tlmgr install tools
 RUN tlmgr install babel
+
+RUN R -e "devtools::install_version('insight', version = '0.15.0', dependencies = T)"

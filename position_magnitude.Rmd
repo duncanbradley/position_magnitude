@@ -58,7 +58,7 @@ library(insight)
 library(qwraps2)
 ```
 
-```{r lazy-load-models, echo=FALSE}
+```{r lazy-load-models, include=FALSE}
 lazyload_cache_dir('position_magnitude_cache/latex')
 ```
 

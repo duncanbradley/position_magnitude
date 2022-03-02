@@ -1,20 +1,20 @@
-FROM thomasweise/docker-texlive-thin
+# Add the rocker/verse Docker image for R 4.1.2
+
 FROM rocker/verse:4.1.2
 
-
-# Add files to container
+# Add our files to container
 
 ADD data/ /home/rstudio/data/
 ADD figures/ /home/rstudio/figures/
 ADD position_magnitude.Rmd /home/rstudio/
 ADD position_magnitude.Rproj /home/rstudio/
 ADD position_magnitude_cache/ /home/rstudio/position_magnitude_cache/
+ADD template.tex /home/rstudio/
+ADD makefile /home/rstudio/
+ADD vgtc.cls /home/rstudio/
+ADD bib_styles/ /home/rstudio/bib_styles/
 
-# Change permissions of cache folder
-
-RUN chmod -R 777 /home/rstudio/position_magnitude_cache/
-
-# Add required R packages to container
+# Add appropriate versions of required R packages to container
 
 RUN R -e "install.packages('devtools')"
 
@@ -33,17 +33,3 @@ RUN R -e "devtools::install_version('bookdown', version = '0.24', dependencies =
 RUN R -e "devtools::install_version('qwraps2', version = '0.5.2', dependencies = T)"
 RUN R -e "devtools::install_github('crsh/papaja')"
 
-# Add TeX Live to container to allow easy building of PDF
-
-
-
-ADD template.tex /home/rstudio/
-ADD makefile /home/rstudio/
-ADD vgtc.cls /home/rstudio/
-ADD bib_styles/ /home/rstudio/bib_styles/
-
-#RUN tlmgr install texlive-latex-extra
-# RUN apt-get install texlive-latex-extra
-#RUN R -e "devtools::install_version('tinytex', dependencies = T)"
-
-# FROM thomasweise/docker-texlive-thin

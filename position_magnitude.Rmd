@@ -8,6 +8,7 @@ output:
     keep_tex: yes
     template: template.tex
     citation_package: natbib
+    fig_crop: no
 title: "Top of the Charts: The Influence of Position and Axis Range on Interpretations of Magnitude"
 abstract: "Type abstract here"
 index terms: "index terms here"
@@ -330,7 +331,7 @@ The experiment was advertised on Prolific.co, a platform for recruiting particip
 
 [^2]: Attention check questions are described in the Procedure.
 
-[^3]: Age data failed to save for one participant, but was available for all other 149 participants in the dataset.
+[^3]: Age data was unavailable for one participant, but was available for all other 149 participants in the dataset.
 
 ### Materials
 
@@ -346,9 +347,9 @@ img2 <- image_read("figures/E23_lo.png")
 image_append(c(img1, img2))
 ```
 
-In experimental trials (n = 40), all three data points were either plotted in the top third of the chart ('high' condition: Figure \@ref(fig:example-charts), left) or in the bottom third of the chart ('low' condition: Figure \@ref(fig:example-charts), right). The dataset differed for each distinct scenario, but was identical for the two conditions associated with a given scenario. In filler trials (n = 15) and attention check trials (n = 5), all three data points were plotted in the middle third of the chart.
-
 The y-axis range in each chart was 10 percentage points. Horizontal gridlines appeared at one-unit increments. In all trials, the gridline 1.5 percentage points above the bottom edge of the chart was labelled with a percentage value, as was the gridline 1.5 percentage points below the top edge of the chart.
+
+In experimental trials (n = 40), all three data points were either plotted in the top third of the chart ('high' condition: Figure \@ref(fig:example-charts), left) or in the bottom third of the chart ('low' condition: Figure \@ref(fig:example-charts), right). The dataset differed for each distinct scenario, but was identical for the two conditions associated with a given scenario. In filler trials (n = 15) and attention check trials (n = 5), all three data points were plotted in the middle third of the chart.
 
 ### Procedure
 
@@ -358,7 +359,7 @@ Two responses were required for each trial: one rating for the probability of th
 
 Each Likert scale used to collect ratings had two anchors at the extremes, but all other options were unlabelled. The leftmost option in the 'probability' Likert scale was *'Very unlikely'* and the rightmost option *'Very likely'*. The leftmost option in the 'severity' Likert scale was *'Very mild'* and the rightmost option *'Very severe'*. Likert scales appeared on the same screen as the text and chart (see Figure \@ref(fig:example-trial)). Participants were permitted to change their responses as many times as they wished before proceeding to the next trial, but could not return to previous trials.
 
-```{r example-trial, fig.cap= "Example Trial", echo=FALSE, out.width="250px"}
+```{r example-trial, fig.cap= "Example Trial. Participants rated the chance and severity of consequences in each trial.", echo=FALSE, out.width="250px"}
 knitr::include_graphics("figures/example_trial.png")
 ```
 
@@ -377,8 +378,6 @@ Before exiting the experiment, participants were informed that all data presente
 ### Design
 
 The experiment used a within-participants design, with each participant responding to both versions of each chart. The independent variable, vertical position, had two levels: *high* (data points presented in the upper third) and *low* (data points presented in the lower third). In each trial, responses for the two dependent variables were elicited: participants rated the probability and severity of the negative event on seven-point Likert scales.
-
-Materials were divided into two lists. One list contained five experimental items in the 'high' condition, five experimental items in the 'low' condition, eight filler items, and two attention check questions. The other list contained the alternate versions of each of the experimental items, seven different filler items, and three different attention check questions. The order of the two lists was counterbalanced across participants, and within each list, items were presented in a random order.
 
 ## Analysis
 
@@ -399,7 +398,7 @@ likert_plot <- function(df) {
 
   df %>% 
     ggplot(aes(y = {{IV1}}, fill = chance_slider.response)) +
-    geom_bar(width=0.5,
+    geom_bar(width=0.8,
              position = position_stack(reverse = TRUE)) +
     scale_fill_brewer(type = "div", palette = "RdYlGn",
                       direction = -1) +
@@ -411,21 +410,23 @@ likert_plot <- function(df) {
                                 "\"Very\nlikely\""), 
                        breaks = c(0, n_obs),
                        position = "top") +
-    geom_segment(aes(x = 0, xend = n_obs, # specifying the arrow
-                     y = 2.5,
-                     yend = 2.5),
-                 arrow = arrow(ends = "both")) + 
-    theme_minimal(base_size = 20) +
+    theme_minimal(base_size = 18) +
     theme(axis.text.x = element_text(face = "italic"),
-         legend.position = "none") +
-    coord_cartesian(clip = "off")
+          legend.position = "none",
+          panel.grid = element_blank()) +
+    coord_fixed(ratio = n_obs/12, 
+                ylim = c(0.5, 2.5), 
+                xlim = c(0, n_obs+n_obs/10),
+                    clip = "off", expand = FALSE) 
 }
 ```
 
 Figure \@ref(fig:r1-c-plot) shows the distribution of probability magnitude ratings for data points presented at high and low positions, across all experimental items.
 
-```{r r1-c-plot, warning = FALSE, echo=FALSE, fig.cap= "Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings, ranging from \"Very unlikely\" (far left, dark green) to \"Very likely\" (far right, red), is shown separately for charts where values were presented at a High Position (top) and a Low Position (bottom). Note that a greater proportion of values in the High Position condition were rated as representing higher probabilities (right-hand side) than values in the Low Position condition, where a greater proportion of values were rated as representing lower probabilities (left-hand side).", out.width="250px"}
-likert_plot(risk1_tidy)
+```{r r1-c-plot, warning = FALSE, echo=FALSE, fig.cap= "Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings, ranging from \"Very unlikely\" (far left, dark green) to \"Very likely\" (far right, red), is shown separately for charts where values were presented at a High Position (top) and a Low Position (bottom). Note that a greater proportion of values in the High Position condition were rated as representing higher probabilities (right-hand side) than values in the Low Position condition, where a greater proportion of values were rated as representing lower probabilities (left-hand side).", out.width="250px", fig.height=2}
+likert_plot(risk1_tidy) +
+    annotate("segment", x=400, y=3.2, xend=2700, yend=3.2,
+             arrow=arrow(ends = "both", type = "closed", length = unit(10, "pt")))
 ```
 
 ```{r r1-c, cache=TRUE, cache.comments= FALSE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
@@ -513,6 +514,34 @@ summary_extract(r1_sl, "condition1")
 ```
 
 We also ran two additional analyses, to test whether or not these results can be explained by differences in graph literacy. These models were identical to the above models except for the inclusion of participants' graph literacy scores as an additional fixed effect. Adjusting for participants' graph literacy scores did not eliminate the effects of data points' positions on probability magnitude ratings (z = `r printnum(r1_cl.statistic)`, p `r printp(r1_cl.p.value, add_equals = TRUE)`) or severity magnitude ratings (z = `r printnum(r1_sl.statistic)`, p `r printp(r1_sl.p.value, add_equals = TRUE)`).
+
+```{r r1-c-emms, echo=FALSE, out.width="250px", fig.height=3.2}
+r1_c_emm <- emmeans(r1_c@model, ~ condition) %>% as_tibble()
+
+hex_conventional <- RColorBrewer::brewer.pal(8, 'Set2')[1]
+
+r1_c_emm %>%
+  as_tibble() %>%
+  mutate_at(vars("emmean":"asymp.UCL"), as.numeric) %>%
+  ggplot(aes(x = condition, y = emmean, colour = I(hex_conventional), group = 1)) +
+  geom_linerange(aes(ymin = asymp.LCL, ymax = asymp.UCL),
+                 position = position_dodge(width = 0.1),
+                 size = 3, alpha = 0.5) +
+  geom_point(position = position_dodge(width = 0.1), size = 3) +
+  geom_line(position = position_dodge(width = 0.1),
+            size = 2) +
+  lims(y = c(-1.65, 2)) +
+  labs(y = "Estimated\nMarginal Mean",
+       x = "Physical Position",
+       title = "Chance Mangitude Ratings") +
+  scale_x_discrete(labels = c('Low','High'),
+                   limits = c("lo", "hi")) +
+  theme_minimal(base_size = 18) +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(size=20, hjust = 0.5))
+```
 
 ## Discussion
 
@@ -613,10 +642,10 @@ text_pos <- min(upper_lim, lower_lim) +
                     xlim = c(0.5, 3.5), 
                     clip = "off",
                     expand = FALSE) +
-    geom_segment(aes(x = -0.2, xend = -0.2, # specifying the vertical arrow
+    geom_segment(aes(x = -0.21, xend = -0.21, # specifying the vertical arrow
                      y = arrow_start,
                      yend = arrow_end),
-                 arrow = arrow(length = unit(0.5,"cm")), size = 1.5, colour = "black") +
+                 arrow = arrow(length = unit(0.5,"cm")), size = 1.2, colour = "black") +
         geom_segment(aes(x = -1, xend = -1, 
                      y = -Inf,
                      yend = Inf), alpha = divider_alpha, size = 1) + 
@@ -673,7 +702,7 @@ literacy_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise
 
 The experiment was not made available on Prolific.co to those who had participated in E1, or those who signed-up to prolific.co after 24th July 2021 (thus prior to the shift in participant demographics). Normal or corrected-to-normal vision and English fluency were required for participation.
 
-Data were returned by 129 participants. Five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded the final dataset for the follow reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Project Number:).
+Data were returned by 129 participants. Five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded from the final dataset for the follow reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Project Number:).
 
 ### Procedure
 
@@ -687,8 +716,10 @@ Participants also specified the highest level of education they had received, in
 
 Figure \@ref(fig:r2-c-plot) plots participants' ratings of probability, for data points presented at high and low positions, in charts with conventional axis orientations and inverted axis orientations.
 
-```{r r2-c-plot, echo=FALSE, fig.cap="Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings is shown separately for each combination of the levels of each condition (axis orientation: conventional, inverted; data points' position: high, low). Note that the pattern of responses to data presented at different positions in the Conventional Axis condition appears to be the opposite to the pattern for Inverted Axis condition. When charts used conventional axes, higher probability ratings were more common in the High Position condition, whereas when charts used inverted axes, higher probability ratings were more common in the Low Position condition.", out.width="250px"}
-likert_plot(risk2_tidy) + facet_wrap(~ ori, ncol = 1, labeller = labeller(ori = str_to_title))
+```{r r2-c-plot, echo=FALSE, fig.cap="Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings is shown separately for each combination of the levels of each condition (axis orientation: conventional, inverted; data points' position: high, low). Note that the pattern of responses to data presented at different positions in the Conventional Axis condition appears to be the opposite to the pattern for Inverted Axis condition. When charts used conventional axes, higher probability ratings were more common in the High Position condition, whereas when charts used inverted axes, higher probability ratings were more common in the Low Position condition.", out.width="250px", fig.height=3.7}
+likert_plot(risk2_tidy) + facet_wrap(~ ori, ncol = 1, labeller = labeller(ori = str_to_title)) +
+  geom_segment(x=100, y=4.5, xend=650, yend=4.5,
+             arrow=arrow(ends = "both", type = "closed", length = unit(10, "pt")), data = risk2_tidy %>% slice_head(n = 1))
 ```
 
 ```{r r2-c, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
@@ -737,33 +768,7 @@ get_emms <- function(position, orientation) {
 invisible(do.call(mapply, c(get_emms, unname(id))))
 ```
 
-
 For probability magnitude ratings, there was a significant interaction between position in physical space, and y-axis orientation ($\chi$^2^)(`r in_paren(r2_c.df)`) = `r printnum(r2_c.LR)`, p `r printp(r2_c.p, add_equals = TRUE)`. This interaction is plotted in Figure \@ref(fig:r2-int-plot).
-
-```{r r2-int-plot, fig.cap="Estimated marginal means (generated by our statistical model) for responses to data points at high and low physical positions, in charts with conventional and inverted axes. The slope for conventional charts differs from the slope of inverted charts. Thus, the effect of position on interpretation of magnitudes differs according to axis orientation. Translucent bars show 95% confidence intervals.", echo=FALSE, out.width="250px"}
-r2_c_emm %>%
-  as_tibble() %>%
-  mutate_at(vars("emmean":"asymp.UCL"), as.numeric) %>%
-  ggplot(aes(x = pos, y = emmean, colour = ori)) +
-  geom_linerange(aes(ymin = asymp.LCL, ymax = asymp.UCL), 
-                 position = position_dodge(width = 0.2),
-                 size = 3, alpha = 0.5) +
-  geom_point(position = position_dodge(width = 0.2), size = 3) +
-  geom_line(aes(group = ori), 
-            position = position_dodge(width = 0.2), 
-            size = 2) +
-  lims(y = c(-1.65, 2)) + 
-  labs(y = "Est. Marginal Mean",
-       x = "Physical Position",
-       colour = "Orientation") +
-  scale_x_discrete(labels = c('Low','High'),
-                   limits = c("lo", "hi")) +
-  scale_colour_brewer(labels = c('Conventional', 'Inverted'),
-                      limits = c("conventional", "inverted"),
-                      palette = "Set2") + 
-  theme_minimal() +
-  theme(legend.position = "top")
-```
 
 ```{r get-contrasts-function, echo=FALSE}
 get_contrasts <- function(orientation, position, contrast_df) {
@@ -870,6 +875,35 @@ There was also an interaction between physical position and axis orientation for
 
 [^5]: See Footnote 3
 
+```{r r2-int-plot, fig.cap="Estimated marginal means (generated by our statistical model) for responses to data points at high and low physical positions, in charts with conventional and inverted axes. The slope for conventional charts differs from the slope of inverted charts. Thus, the effect of position on interpretation of magnitudes differs according to axis orientation. Translucent bars show 95\\% confidence intervals.", echo=FALSE, out.width="250px", fig.height=3.2}
+r2_c_emm %>%
+  as_tibble() %>%
+  mutate_at(vars("emmean":"asymp.UCL"), as.numeric) %>%
+  ggplot(aes(x = pos, y = emmean, colour = ori)) +
+  geom_linerange(aes(ymin = asymp.LCL, ymax = asymp.UCL), 
+                 position = position_dodge(width = 0.1),
+                 size = 3, alpha = 0.5) +
+  geom_point(position = position_dodge(width = 0.1), size = 3) +
+  geom_line(aes(group = ori), 
+            position = position_dodge(width = 0.1), 
+            size = 2) +
+  lims(y = c(-1.65, 2)) + 
+  labs(y = "Estimated\nMarginal Mean",
+       x = "Physical Position",
+       colour = "Orientation:",
+       title = "Interaction in Chance Mangitude Ratings") +
+  scale_x_discrete(labels = c('Low','High'),
+                   limits = c("lo", "hi")) +
+  scale_colour_brewer(labels = c('Conventional', 'Inverted'),
+                      limits = c("conventional", "inverted"),
+                      palette = "Set2") + 
+  theme_minimal(base_size = 18) +
+  theme(legend.position = "top",
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(size=20, hjust = 0.5))
+```
+
 ## Discussion
 
 When using conventional graphs only (E1), we found that displaying data within different axis limits affected magnitude judgements. However, it was unclear whether judgements were based on data points' absolute or relative positions, because similar interpretations would result from both features. Therefore, in E2, for half of trials, we reversed the mapping of values in physical space, so these two features would imply different magnitudes for a given value.
@@ -926,7 +960,7 @@ Like E1, this experiment used a within-participants, fully repeated-measures des
 
 Figure \@ref(fig:r3-c-plot) plots participants' probability magnitude ratings for data points presented at different positions in inverted charts.
 
-```{r r3-c-plot, echo=FALSE, fig.cap="Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings, ranging from \"Very unlikely\" (far left, dark green) to \"Very likely\" (far right, red), is shown separately for charts where values were presented at a High Position (top) and a Low Position (bottom). Note that values in the Low Position condition were more frequently rated as representing higher probabilities (right-hand side) than values in the High Position condition, which were more frequently rated as representing lower probabilities (left-hand side).", out.width="250px"}
+```{r r3-c-plot, echo=FALSE, fig.cap="Participants rated the probability of each negative event occurring on a 7-point Likert scale. The distribution of ratings, ranging from \"Very unlikely\" (far left, dark green) to \"Very likely\" (far right, red), is shown separately for charts where values were presented at a High Position (top) and a Low Position (bottom). Note that values in the Low Position condition were more frequently rated as representing higher probabilities (right-hand side) than values in the High Position condition, which were more frequently rated as representing lower probabilities (left-hand side).", out.width="250px", fig.height=2}
 likert_plot(risk3_tidy)
 ```
 
@@ -998,7 +1032,7 @@ There was no difference between severity magnitude ratings in inverted charts: $
 
 When viewing charts with inverted axes, participants judged data points' magnitude according to whether accompanying blank space implied the existence of higher or lower plausible values. They ignored conventional associations between position and magnitude to interpret magnitude in the context of the chart.
 
-```{r r3-c-emms, echo=FALSE}
+```{r r3-c-emms, echo=FALSE, out.width="250px", fig.height=3.2}
 r3_c_emm <- emmeans(r3_c@model, ~ condition) %>% as_tibble()
 
 r3_c_emm.h <- r3_c_emm %>% filter(condition == "hi") %>% pull(emmean)
@@ -1009,28 +1043,30 @@ r3_c_emm.hUCL <- r3_c_emm %>% filter(condition == "hi") %>% pull(asymp.UCL)
 r3_c_emm.lLCL <- r3_c_emm %>% filter(condition == "lo") %>% pull(asymp.LCL)
 r3_c_emm.lUCL <- r3_c_emm %>% filter(condition == "lo") %>% pull(asymp.UCL)
 
-# r3_c_emm %>%
-#   as_tibble() %>%
-#   mutate_at(vars("emmean":"asymp.UCL"), as.numeric) %>%
-#   ggplot(aes(x = condition, y = emmean, colour = condition)) +
-#   geom_linerange(aes(ymin = asymp.LCL, ymax = asymp.UCL), 
-#                  position = position_dodge(width = 0.2),
-#                  size = 3, alpha = 0.5) +
-#   geom_point(position = position_dodge(width = 0.2), size = 3) +
-#   geom_line(aes(group = condition), 
-#             position = position_dodge(width = 0.2), 
-#             size = 2) +
-#   #lims(y = c(-1.65, 2)) + 
-#   labs(y = "Est. Marginal Mean",
-#        x = "Physical Position",
-#        colour = "Orientation") +
-#   scale_x_discrete(labels = c('Low','High'),
-#                    limits = c("lo", "hi")) +
-#   scale_colour_brewer(labels = c('Conventional', 'Inverted'),
-#                       limits = c("conventional", "inverted"),
-#                       palette = "Set2") + 
-#   theme_minimal() +
-#   theme(legend.position = "top")
+hex_inverted <- RColorBrewer::brewer.pal(8, 'Set2')[2]
+
+r3_c_emm %>%
+  as_tibble() %>%
+  mutate_at(vars("emmean":"asymp.UCL"), as.numeric) %>%
+  ggplot(aes(x = condition, y = emmean, colour = I(hex_inverted))) +
+  geom_linerange(aes(ymin = asymp.LCL, ymax = asymp.UCL),
+                 position = position_dodge(width = 0.1),
+                 size = 3, alpha = 0.5) +
+  geom_point(position = position_dodge(width = 0.1), size = 3) +
+  geom_line(aes(group = condition),
+            position = position_dodge(width = 0.1),
+            size = 2) +
+  lims(y = c(-1.65, 2)) +
+  labs(y = "Estimated\nMarginal Mean",
+       x = "Physical Position",
+       title = "Chance Mangitude Ratings") +
+  scale_x_discrete(labels = c('Low','High'),
+                   limits = c("lo", "hi")) +
+  theme_minimal(base_size = 18) +
+  theme(legend.position = "none",
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(size=20, hjust = 0.5))
 ```
 
 In the previous experiment (E2), we did not observe a significant difference between magnitude ratings for data points at different positions, for inverted graphs. We suggested that a false negative may have occurred in E2, due to insufficient experimental power to detect this difference. However, E3, with increased experimental power, demonstrates that such a difference is statistically significant.

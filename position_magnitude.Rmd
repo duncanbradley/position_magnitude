@@ -10,7 +10,6 @@ output:
     citation_package: natbib
     fig_crop: no
 title: "Top of the Charts: The Influence of Position and Axis Range on Interpretations of Magnitude"
-abstract: "Type abstract here"
 index terms: "index terms here"
 author_footer1: "Author one is with Uni of X. Email: author1@uniofX.com"
 author_footer2: "Author two is with Uni of X. Email: author1@uniofX.com"
@@ -30,6 +29,8 @@ editor_options:
   markdown: 
     wrap: 72
 bibliography: template.bib
+abstract: |
+  When visualising data, chart designers have the freedom to choose the upper and lower limits of their numerical axes. Axis limits determine the physical position of plotted values, and can introduce substantial blank space. In three experiments, we demonstrate that the choice of axis limits affects interpretations of plotted values’ magnitudes. However, participants did not simply equate values presented at higher vertical positions with greater magnitudes. Instead, they used the numerical context supplied by axis limits to assess the magnitude of data points, in contrast to accompanying blank space. Data points were considered larger when they were numerically greater than the plausible values represented by blank space. Chart designers should consider what their axis range implies about the magnitude of plotted data points. We recommend displaying the range of relevant values to communicate the context of the specific dataset.
 ---
 
 ```{r setup, include=FALSE}
@@ -305,6 +306,14 @@ All data visualisations used in the present set of experiments displayed the pro
 
 Risk events are composed of two core components: 1) probability of occurrence and 2) severity of harm. Individuals' assessments of probability and severity are not necessarily independent. A particular event is perceived as more likely when it is described as having more severe outcomes (Harris & Corner, 2011, Harris et al., 2009). In a similar manner, a particular event is associated with more substantial consequences when it is described as more probable (Kupor & Laurin, 2020). One account suggests that perceptions of probability and outcome magnitude are related because they are both assumed to reflect the potency of the event's cause (probability-outcome correspondence principle; Keren & Teigen, 2001). According to this account, probabilities can occasionally provide meaningful indications of magnitude (e.g., rainfall), but it is inappropriate to apply this perspective to all situations (e.g., volcanic eruptions). Therefore, even though charts in the present set of experiments only display outcome probability, assessments of outcome severity may also differ between conditions. Collecting separate judgements of outcome probability and outcome severity for each scenario provides a clearer picture how the manipulation affects each aspect of participants' representations of risk. Use of Likert scales (with discrete options) rather than visual analogue scales (with continuous options; Sung & Wu, 2018) prevents participants from simply mapping probability percentages directly onto a linear scale. We also administered a data visualisation literacy measure, to determine the degree to which our manipulation affects interpretations after we have accounted for differences in graph literacy. Responses to visualisations which violate graphical conventions by using atypical scales suggest that individuals with lower graph literacy are more likely to draw on data points' physical positions when making inferences about their magnitudes (Okan, Galesic, & Garcia-Retamero, 2016; Okan et al., 2012).
 
+### Pre-Registration
+
+All experiments in this paper are associated with pre-registrations. There are no diversions from pre-registered experimental designs, exclusion criteria or sample size. However, the reported analyses differ in some respects from the pre-registered protocol. For full transparency, we outline these diversions here.
+
+Consistent with our pre-registration, when building models for our main analysis, we sought the most complex random effects structure that would converge. This model structure was identified by the *buildmer* package in R, which subsequently removed terms which did not contribute substantially to explaining variance in ratings. This means that the final model used in analysis was not always the most complex converging model.
+
+In pre-registrations for E2 and E3, we proposed testing for an interaction between our manipulation(s) and graph literacy. However, this was motivated by a concern about whether the presence or absence of effects of our manipulation(s) could be explained by graph literacy. Therefore, we substitute these planned analyses with a more appropriate approach, which treats graph literacy as a covariate only (no interaction term). This matches the pre-registered analysis from E1, so analyses involving literacy are consistent across the three experiments. Due to this revision, pre-registered hypotheses about graph literacy are disregarded. 
+
 # Experiment 1
 
 ## Introduction
@@ -315,31 +324,13 @@ We predicted that probability magnitude ratings and/or severity magnitude rating
 
 ## Methods
 
-### Participants
-
-```{r r1_demographics, echo=FALSE}
-age_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text, na.rm = TRUE), sd = sd(age_textbox.text, na.rm = TRUE)) 
-
-gender_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
-
-literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
-```
-
-The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. A viral social media post on 24th July 2021 endorsing the website attracted many new users from a narrow demographic, skewing studies' participant distributions (Prolific, 2021), however, data for this experiment were collected in May 2021. Normal or corrected-to-normal vision and English fluency were required for participation. Data were returned by 160 participants. Per pre-registered rejection criteria[^1], 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly[^2]. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^3]. Participants' graph literacy scores consisted of the average of responses on five six-point scales; the mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`). Participants whose submissions were approved were paid £3.55. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Project Number:).
-
-[^1]: <https://osf.io/23wpn>
-
-[^2]: Attention check questions are described in the Procedure.
-
-[^3]: Age data was unavailable for one participant, but was available for all other 149 participants in the dataset.
-
 ### Materials
 
 Text and an accompanying chart were presented in each trial. Two sentences outlined a scenario involving a risk, and explained what the chart depicted. For example:
 
 *You are going on a camping trip next week. The graph below shows the chance of heavy rainfall for three randomly selected days next week.*
 
-Each dot plot displayed the probability (as a percentage) of a negative outcome occurring, for three options associated with the scenario (Figure \@ref(fig:example-charts)). The label 'Chance' was used instead of 'Probability' to avoid confusion with the standard 0-1 scale for probabilities, and to reflect casual usage.
+Each dot plot displayed the chance (as a percentage) of a negative outcome occurring, for three options associated with the scenario (Figure \@ref(fig:example-charts)). The label 'Chance' was used instead of 'Probability' to avoid confusion with the standard 0-1 scale for probabilities, and to reflect casual usage.
 
 ```{r example-charts, fig.cap= "Example Charts. The 'high' condition (left) presents data points near the top of the chart; the 'low' condition (right) presents the same data points near the bottom of the chart.", echo=FALSE, out.width="250px"}
 img1 <- image_read("figures/E23_hi.png")
@@ -347,9 +338,9 @@ img2 <- image_read("figures/E23_lo.png")
 image_append(c(img1, img2))
 ```
 
-The y-axis range in each chart was 10 percentage points. Horizontal gridlines appeared at one-unit increments. In all trials, the gridline 1.5 percentage points above the bottom edge of the chart was labelled with a percentage value, as was the gridline 1.5 percentage points below the top edge of the chart.
+In experimental trials (n = 40), all three data points were either plotted in the top third of the chart (high physical condition: Figure X, left) or in the bottom third of the chart (low physical condition: Figure X, right). The plotted dataset differed for each distinct scenario, but was identical for the two charts associated with a given scenario. In filler trials (n = 15) and attention check trials (n = 5), data points were plotted in the middle third of the chart.
 
-In experimental trials (n = 40), all three data points were either plotted in the top third of the chart ('high' condition: Figure \@ref(fig:example-charts), left) or in the bottom third of the chart ('low' condition: Figure \@ref(fig:example-charts), right). The dataset differed for each distinct scenario, but was identical for the two conditions associated with a given scenario. In filler trials (n = 15) and attention check trials (n = 5), all three data points were plotted in the middle third of the chart.
+The y-axis range in each chart was 10 percentage points. Horizontal gridlines appeared at one-unit increments. In all trials, the gridline 1.5 percentage points above the bottom edge of the chart was labelled with a percentage value, as was the gridline 1.5 percentage points below the top edge of the chart.
 
 ### Procedure
 
@@ -373,11 +364,29 @@ For attention check trials, the questions above the Likert scales were as follow
 
 *What is the severity response specified above?*
 
-Before exiting the experiment, participants were informed that all data presented was fictional, and were offered guidance in case of any distress.
+Before exiting the experiment, participants were informed that all data presented was fictional and offered guidance in case of any distress.
 
 ### Design
 
-The experiment used a within-participants design, with each participant responding to both versions of each chart. The independent variable, vertical position, had two levels: *high* (data points presented in the upper third) and *low* (data points presented in the lower third). In each trial, responses for the two dependent variables were elicited: participants rated the probability and severity of the negative event on seven-point Likert scales.
+We employed a repeated-measures within-participants design. In experimental trials, participants encountered each scenario twice: once with data presented at a high physical position and once with data presented at a low physical position. In each trial, participants rated the chance of a negative event occurring, and the severity of its consequences, on seven-point Likert scales.
+
+Materials were divided into two lists to minimise different versions of the same scenario appearing  in close succession. In one list, half of experimental scenarios were accompanied by charts displaying data at high physical positions, and half were accompanied by charts displaying data at low physical positions. The other list contained the alternate versions of each of the experimental items. Fillers and attention check questions were split between the two lists, and did not appear more than once. The order of the two lists was counterbalanced across participants, and within each list, items were presented in a random order.
+
+### Participants
+
+```{r r1_demographics, echo=FALSE}
+age_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text, na.rm = TRUE), sd = sd(age_textbox.text, na.rm = TRUE)) 
+
+gender_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
+
+literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+```
+
+The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. A viral social media post on 24th July 2021 endorsing the website attracted many new users from a narrow demographic, skewing studies' participant distributions (Prolific, 2021), however, data for this experiment were collected prior. Normal or corrected-to-normal vision and English fluency were required for participation. 
+
+Data were returned by 160 participants. Per pre-registered rejection criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^1]. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`), out of a maximum of 30. Participants whose submissions were approved were paid £3.55. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-18258).
+
+[^1]: Age data was unavailable for one participant, but was available for all other 149 participants in the dataset.
 
 ## Analysis
 
@@ -437,9 +446,6 @@ r1_c <- buildclmm(chance_slider.response ~ condition +
 #
 ```
 
-
-
-
 ```{r r1-c-cmpr, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, warning=FALSE, dependson="r1-c"}
 r1_c_cmpr <- clmm(comparison(r1_c),
              data = risk1_tidy)
@@ -449,6 +455,11 @@ r1_c_cmpr <- clmm(comparison(r1_c),
 ```{r r1-c-anova, eval=TRUE, echo=FALSE}
 anova_results(r1_c, r1_c_cmpr)
 ```
+
+```{r}
+knitr::kable(head(mtcars[, 1:4]), "simple")
+```
+
 
 A likelihood ratio test reveals a significant difference between the distribution of probability magnitude ratings in the 'high position' and 'low position' conditions: ($\chi$^2^)(`r in_paren(r1_c.df)`) = `r printnum(r1_c.LR)`, p `r printp(r1_c.p, add_equals = TRUE)`. Data points at high positions elicited higher ratings than the same data points at low positions.
 
@@ -678,15 +689,25 @@ Pre-registration of hypotheses is available at <https://osf.io/zhe7q>. For chart
 
 ## Method
 
-### Design
-
-We employed a Latin-squared within-participants design: each combination of position and axis orientation conditions was presented to each participants, but unlike E1, each participant only viewed one version of each scenario.
-
 ### Materials
 
-For this experiment, we increased the number of scenarios in the experimental condition. This provides some compensation for the reduced experimental power caused by a reduction in participant numbers, and a shift to a Latin-squared design where participants only viewed one graph for each scenario (thus reducing the number of observations per participant).
+For this experiment, we increased the number of scenarios. This provided some compensation for the reduced experimental power caused by a reduction in participant numbers, and a shift to a Latin-squared design where participants only viewed one chart per scenario (thus reducing the number of observations per participant).
 
-Two scenarios which were fillers in E1 were used as experimental items and three extra scenarios were added for use as experimental items. One filler item was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). E2 used a total of 24 experiment items, 12 filler items and 5 attention check questions (41 trials in total).
+Two scenarios which were fillers in E1 were used as experimental scenarios and three additional scenarios were created. One filler scenario was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). This gave a total of 24 experiment scenarios, 12 filler scenarios, and 5 attention check questions (41 trials in total).
+
+### Procedure
+
+Participants specified the highest level of education they had received, in addition to demographic questions on age and gender. An additional slide in the instructions explained how to identify and interpret the different axis orientations, and encouraged participants to pay attention to this:
+
+> You should pay attention to the direction of the arrow on the 'Chance' axis. If the arrow points upwards, the numbers in the graph get bigger as the axis goes up. Alternatively, if the arrow points downwards, the numbers get bigger as the axis goes down.
+
+Otherwise, the procedure was identical to E1.
+
+### Design
+
+We employed a Latin-squared within-participants design. Participants encountered each individual scenario only once, but were exposed to all combinations of position and axis orientation throughout the experiment.
+
+### Participants
 
 ```{r r2_demographics, echo=FALSE}
 age_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text), sd = sd(age_textbox.text)) 
@@ -698,19 +719,9 @@ edu_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% group_by(edu_s
 literacy_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
 ```
 
-### Participants
+The experiment was not advertised on Prolific.co to those who had participated in E1, or those who signed-up to Prolific.co after 24th July 2021 (thus prior to the shift in participant demographics). Normal or corrected-to-normal vision and English fluency were required for participation.
 
-The experiment was not made available on Prolific.co to those who had participated in E1, or those who signed-up to prolific.co after 24th July 2021 (thus prior to the shift in participant demographics). Normal or corrected-to-normal vision and English fluency were required for participation.
-
-Data were returned by 129 participants. Five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded from the final dataset for the follow reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Project Number:).
-
-### Procedure
-
-An additional slide in the instructions encouraged participants to pay attention to axis orientation:
-
-> You should pay attention to the direction of the arrow on the 'Chance' axis. If the arrow points upwards, the numbers in the graph get bigger as the axis goes up. Alternatively, if the arrow points downwards, the numbers get bigger as the axis goes down.
-
-Participants also specified the highest level of education they had received, in addition to demographic questions on age and gender. Otherwise, the procedure was the same as E1.
+Data were returned by 129 participants. Per pre-registered rejection criteria, five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded from the final dataset for the following reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20464).
 
 ## Analysis
 
@@ -829,9 +840,7 @@ There was no significant difference between ratings for data points plotted at d
 
 Data points plotted at high physical positions were associated with higher ratings when a conventional axis was used than when an inverted axis was used (`r printnum(r2_c_contrast.h.z.ratio)`, p `r printp(r2_c_contrast.h.p.value, add_equals = TRUE)`). However, data points plotted at low physical positions were not associated with different ratings depending on the axis orientation (`r printnum(r2_c_contrast.l.z.ratio)`, p `r printp(r2_c_contrast.l.p.value, add_equals = TRUE)`).
 
-This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. The interaction also remained when controlling for participants' graph literacy scores: z = `r printnum(r2_cl.statistic)`, p `r printp(r2_cl.p.value, add_equals = TRUE)`.[^4]
-
-[^4]: This represents a divergence from pre-registered analysis protocol. We tested whether controlling for participants' graph literacy scores would change whether effect(s) resulted from the manipulation, rather than testing for an interaction between the effect(s) and graph literacy scores literacy.
+This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. The interaction also remained when controlling for participants' graph literacy scores: z = `r printnum(r2_cl.statistic)`, p `r printp(r2_cl.p.value, add_equals = TRUE)`.
 
 ```{r r2-s, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r2_s <- buildclmm(severity_slider.response ~ pos*ori +
@@ -871,9 +880,7 @@ r2_sl <- clmm(add.terms(formula(r2_s), "literacy"),
 summary_extract(r2_sl, "ori1:pos1")
 ```
 
-There was also an interaction between physical position and axis orientation for severity magnitude ratings: ($\chi$^2^)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect in severity ratings from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as an additional fixed effect did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.[^5]
-
-[^5]: See Footnote 3
+There was also an interaction between physical position and axis orientation for severity magnitude ratings: ($\chi$^2^)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect in severity ratings from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as an additional fixed effect did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
 
 ```{r r2-int-plot, fig.cap="Estimated marginal means (generated by our statistical model) for responses to data points at high and low physical positions, in charts with conventional and inverted axes. The slope for conventional charts differs from the slope of inverted charts. Thus, the effect of position on interpretation of magnitudes differs according to axis orientation. Translucent bars show 95\\% confidence intervals.", echo=FALSE, out.width="250px", fig.height=3.2}
 r2_c_emm %>%
@@ -910,7 +917,7 @@ When using conventional graphs only (E1), we found that displaying data within d
 
 In E2 we replicated the primary finding from E1. In charts with conventional axis orientations, the same data points elicited different magnitude judgements when presented at different positions. These judgements corresponded to magnitudes implied by data points' absolute and relative positions. However, in charts with inverted axis orientations, the same pattern was not observed. Therefore, we can conclude that interpretations of magnitude are affected by a chart's physical arrangement of values. The pattern of differences in magnitude judgements for data points presented at distinct physical positions depends on how axes are oriented. This interaction was robust to inclusion of graph literacy as an additional effect.
 
-There was not sufficient evidence to conclude that the same data points elicited different magnitude judgements when presented at different positions in *inverted* charts. Therefore, we cannot conclude from these data that magnitude judgements are solely driven by data points' positions relative to other values. However, Figure \@ref(fig:r2-int-plot) suggests that the pattern of results for inverted charts is the reverse of the pattern for conventional charts. An additional experiment is required to confirm whether this is the case.
+Figure \@ref(fig:r2-int-plot) suggests that the pattern of results for inverted charts is the reverse of the pattern for conventional charts. However, our analysis suggests that the same data points did not elicit significantly different magnitude judgements when presented at different positions in *inverted* charts. Therefore, we cannot conclude from this analysis that magnitude judgements are driven solely by data points' positions relative to other values. The lack of significant difference is likely due to a lack of experimental power. An additional experiment is required to confirm whether there is a genuine difference.
 
 # Experiment 3
 
@@ -928,7 +935,17 @@ In our pre-registered hypotheses (<https://osf.io/t4snu>), we outlined what diff
 
 ### Materials
 
-Materials were identical to E1, except for the inversion of the y-axis in all charts, including practice items. There were 60 trials in total (40 experimental items, 15 fillers, 5 attention check questions).
+Materials were identical to E1, except for the inversion of the y-axis in all charts, including practice items. There were 60 trials in total (40 experimental trials, 15 fillers, 5 attention check questions).
+
+### Procedure
+
+As in E2, participants were asked to indicate their education level. One slide in the instructions explained to participants how charts with inverted axes function: *"In all graphs in this experiment, the arrow on the 'Chance' axis points downwards, meaning the numbers get bigger as the axis goes down."*. Otherwise, the procedure was identical to E1.
+
+### Design
+
+Like in E1, we employed a repeated-measures, within-participants design. In experimental trials, participants encountered each scenario twice: once with data presented at a high physical position and once with data presented at a low physical position.
+
+### Participants
 
 ```{r r3_demographics, echo=FALSE}
 age_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(age_textbox.text, na.rm = TRUE), sd = sd(age_textbox.text, na.rm = TRUE)) 
@@ -940,21 +957,11 @@ edu_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% group_by(edu_s
 literacy_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
 ```
 
-### Participants
+The experiment was not advertised on Prolific.co to those who had participated in E1 or E2, or those who signed-up to Prolific.co after 24th July 2021. Normal or corrected-to-normal vision and English fluency were required for participation.
 
-The experiment was not made available on Prolific.co to those who had participated in E1 or E2, or those who signed-up to prolific.co after 24th July 2021 (thus prior to the shift in participant demographics). Normal or corrected-to-normal vision and English fluency were required for participation.
+Data were returned by 161 participants. Per pre-registered rejection criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^2]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20745).
 
-Data were returned by 161 participants. Following pre-registered rejection criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were accepted and used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^6]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Project Number:).
-
-[^6]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
-
-### Procedure
-
-One slide in the instructions explained to participants how charts with inverted axes function: *"In all graphs in this experiment, the arrow on the 'Chance' axis points downwards, meaning the numbers get bigger as the axis goes down."*. As in E2, participants were asked to indicate their education level. Otherwise, the procedure was as described above.
-
-### Design
-
-Like E1, this experiment used a within-participants, fully repeated-measures design, with each participant responding to both versions of each chart. 
+[^2]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
 
 ## Analysis
 
@@ -992,9 +999,7 @@ r3_cl <- clmm(add.terms(formula(r3_c), "literacy"),
 summary_extract(r3_cl, "condition1")
 ```
 
-A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: ($\chi$^2^)(`r in_paren(r3_c.df)`) = `r printnum(r3_c.LR)`, p `r printp(r3_c.p, add_equals = TRUE)`. Ratings were higher for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_cl.statistic)`, p `r printp(r3_cl.p.value, add_equals = TRUE)`).[^7]
-
-[^7]: See Footnote 3
+A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: ($\chi$^2^)(`r in_paren(r3_c.df)`) = `r printnum(r3_c.LR)`, p `r printp(r3_c.p, add_equals = TRUE)`. Ratings were higher for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_cl.statistic)`, p `r printp(r3_cl.p.value, add_equals = TRUE)`).
 
 ```{r r3-s, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r3_s <- buildclmm(severity_slider.response ~ condition + 
@@ -1024,9 +1029,7 @@ r3_sl <- clmm(add.terms(formula(r3_s), "literacy"),
 summary_extract(r3_sl, "condition1")
 ```
 
-There was no difference between severity magnitude ratings in inverted charts: $\chi$^2^(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`).[^8]
-
-[^8]: See Footnote 3
+There was no difference between severity magnitude ratings in inverted charts: $\chi$^2^(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`).
 
 ## Discussion
 
@@ -1097,7 +1100,7 @@ This set of experiments was not concerned with endorsing or opposing inverted ch
 
 Visualisation rhetoric involves presenting numerical information in a way that provokes a particular interpretation (Hullman & Diakopoulos, 2011). The manipulation of visualisation components examined in the present set of experiments is related to two rhetorical strategies: axis thresholding and contrast. The former is an instance of 'information access' rhetoric, and involves setting an axis range that provides an incomplete picture of the data. The latter is an instance of 'mapping' rhetoric, and employs visual properties to promote comparisons.
 
-We did not find consistent evidence that assessments of outcome severity are affected by the positioning of values representing event probability. This contrasts with prior research on the interplay between appraisals of probability and event magnitude which reports that probability estimates change as a function of magnitude (Harris & Corner, 2011; Harris et al., 2009) and that magnitude estimates change as a function of event probability (Kupor & Laurin, 2020). Unlike this prior work, which substantially manipulated underlying scenarios, our more subtle manipulation retained the same probability values, changing only surrounding context. The effect of relative position on interpretation of numerical information does not consistently extend to magnitude judgements about related but distinct concepts.
+We did not find consistent evidence that assessments of the severity of consequences are affected by the positioning of values representing event probability. Prior research has found that probability estimates change as a function of magnitude (Harris & Corner, 2011; Harris et al., 2009) and that magnitude estimates change as a function of event probability (Kupor & Laurin, 2020). However, whereas prior research focused on the potency of an event’s outcomes, we asked participants to evaluate another feature: the severity of an event’s consequences. How affected parties are impacted by an event is one step removed from a core risk component: the magnitude of the outcome itself. In addition, unlike prior work which substantially manipulated underlying scenarios, our more subtle manipulation retained the same probability values, changing only surrounding context. The effect of relative position on interpretation of probability does not consistently extend to judgements about the severity of consequences.
 
 Adjusting for data visualisation literacy did remove the effect of the influence of axis range on interpretation. Yang et al. (2021) also observed that data visualisation literacy could not sufficiently explain variance in the degree of bias caused by y-axis truncation. This measure captures comprehension of the conventions of data visualisation, indicating receipt of elementary instruction (Okan et al., 2016). Therefore, it is perhaps better suited to measuring ability to decipher more complicated designs, but is not well-placed to predict susceptibility to differences in presentation format (Yang et al., 2021).
 

@@ -52,10 +52,11 @@ library(lme4)
 library(broom)
 library(insight)
 library(qwraps2)
+library(kableExtra)
 ```
 
 ```{r lazy-load-models, include=FALSE}
-lazyload_cache_dir('position_magnitude_cache/latex')
+#lazyload_cache_dir('position_magnitude_cache/latex')
 ```
 
 ```{r load-data, include=FALSE}
@@ -116,11 +117,12 @@ edu_labels <- set_names(c('No formal qualications',
                    "severity_slider.rt",
                    "data_mean",
                    "key_resp.rt",
-                   "type"))) %>% 
+                   "type",
+                   "list_number"))) %>% 
       filter(type == "E") %>%
         inner_join(literacy, by = "participant") %>%
     inner_join(demographics, by = "participant") %>%
-      mutate(across(matches(c("pos", "orientation", "condition")), as_factor)) %>%
+      mutate(across(matches(c("pos", "orientation", "condition", "list_number")), as_factor)) %>%
   mutate(across(c("chance_slider.response",
                   "severity_slider.response"), as.ordered)) %>%
   mutate(across(c("participant",
@@ -260,7 +262,7 @@ random_str <- function(model) {
   model <- model@model
   terms <- model %>% find_random %>% unlist() %>% unname()
   mylist <- model %>% formula %>% findbars() %>% as.character()
-  slopes <- lapply(mylist, str_extract, "(?<=\\+ )(.*)(?=\\| )") %>% 
+  slopes <- lapply(mylist, str_extract, "(?<=\\+ )(.*)(?= \\| )") %>% 
     unlist()
   tibble(terms, slopes)
 }
@@ -456,12 +458,11 @@ r1_c_cmpr <- clmm(comparison(r1_c),
 anova_results(r1_c, r1_c_cmpr)
 ```
 
-```{r}
-knitr::kable(head(mtcars[, 1:4]), "simple")
+```{r r1-c-str, echo=FALSE}
+add_header_above(kable(random_str(r1_c), "latex"), "r1_c")
 ```
 
-
-A likelihood ratio test reveals a significant difference between the distribution of probability magnitude ratings in the 'high position' and 'low position' conditions: ($\chi$^2^)(`r in_paren(r1_c.df)`) = `r printnum(r1_c.LR)`, p `r printp(r1_c.p, add_equals = TRUE)`. Data points at high positions elicited higher ratings than the same data points at low positions.
+A likelihood ratio test reveals a significant difference between the distribution of probability magnitude ratings in the 'high position' and 'low position' conditions: ($\chi$^2^)(`r in_paren(r1_c.df)`) = `r printnum(r1_c.LR)`, p `r printp(r1_c.p, add_equals = TRUE)`. Data points at high positions elicited higher ratings than the same data points at low positions. The model employed random intercepts for each scenario and each participant.
 
 ```{r r1-s, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r1_s <- buildclmm(severity_slider.response ~ condition + 
@@ -481,7 +482,11 @@ r1_s_cmpr <- clmm(comparison(r1_s),
 anova_results(r1_s, r1_s_cmpr)
 ```
 
-There was also a significant difference between severity magnitude ratings in the 'high position' and 'low position' conditions: ($\chi$^2^)`r in_paren(r1_s.df)`) = `r printnum(r1_s.LR)`, p `r printp(r1_s.p, add_equals = TRUE)`. Severity magnitude ratings were higher when data points representing probabilities were presented at higher physical positions, compared to when they were presented at lower physical positions.
+```{r r1-s-str, echo=FALSE}
+add_header_above(kable(random_str(r1_s), "latex"), "r1_s")
+```
+
+There was also a significant difference between severity magnitude ratings in the 'high position' and 'low position' conditions: ($\chi$^2^)`r in_paren(r1_s.df)`) = `r printnum(r1_s.LR)`, p `r printp(r1_s.p, add_equals = TRUE)`. Severity magnitude ratings were higher when data points representing probabilities were presented at higher physical positions, compared to when they were presented at lower physical positions. The model employed random intercepts for each scenario, plus random intercepts and slopes for each participant. The slopes modelled, for each participant, the average difference between responses to data presented at different positions (henceforth referred to as ‘by-position slopes’).
 
 ```{r summary-extract-function, echo=FALSE}
 summary_extract <- function(model, key_term) {
@@ -693,7 +698,15 @@ Pre-registration of hypotheses is available at <https://osf.io/zhe7q>. For chart
 
 For this experiment, we increased the number of scenarios. This provided some compensation for the reduced experimental power caused by a reduction in participant numbers, and a shift to a Latin-squared design where participants only viewed one chart per scenario (thus reducing the number of observations per participant).
 
-Two scenarios which were fillers in E1 were used as experimental scenarios and three additional scenarios were created. One filler scenario was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). This gave a total of 24 experiment scenarios, 12 filler scenarios, and 5 attention check questions (41 trials in total).
+```{r compare-materials, include=FALSE}
+ctable <- compare_df(df_new = r2m, df_old = r1m, group_col = "scenario")
+create_output_table(ctable, limit = Inf) # does not include all
+```
+
+
+Two scenarios which were fillers in E1 were used as experimental scenarios [^2] and three additional scenarios were created. One filler scenario was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). This gave a total of 24 experiment scenarios, 12 filler scenarios, and 5 attention check questions (41 trials in total).
+
+[^2] For one of these scenarios, the mean of the plotted data was also modified.
 
 ### Procedure
 
@@ -751,11 +764,6 @@ r2_c_cmpr <- clmm(comparison(r2_c),
 anova_results(r2_c, r2_c_cmpr)
 ```
 
-```{r r2-c-str, eval=FALSE, echo= FALSE}
-formula(r2_c@model)
-random_str(r2_c)
-```
-
 ```{r r2-c-emms, echo=FALSE, include=FALSE}
 r2_c_emm <- emmeans(r2_c@model, ~ pos * ori)
 
@@ -779,7 +787,11 @@ get_emms <- function(position, orientation) {
 invisible(do.call(mapply, c(get_emms, unname(id))))
 ```
 
-For probability magnitude ratings, there was a significant interaction between position in physical space, and y-axis orientation ($\chi$^2^)(`r in_paren(r2_c.df)`) = `r printnum(r2_c.LR)`, p `r printp(r2_c.p, add_equals = TRUE)`. This interaction is plotted in Figure \@ref(fig:r2-int-plot).
+```{r r2-c-str, echo=FALSE}
+add_header_above(kable(random_str(r2_c), "latex"), "r2_c")
+```
+
+For probability magnitude ratings, there was a significant interaction between position in physical space, and y-axis orientation ($\chi$^2^)(`r in_paren(r2_c.df)`) = `r printnum(r2_c.LR)`, p `r printp(r2_c.p, add_equals = TRUE)`. This interaction is plotted in Figure \@ref(fig:r2-int-plot). The model employed random intercepts and by-position slopes for each scenario. Random intercepts were included for each participant, as well as slopes capturing differences in participants’ responses to data presented at different positions, different orientations, and the interaction between these. 
 
 ```{r get-contrasts-function, echo=FALSE}
 get_contrasts <- function(orientation, position, contrast_df) {
@@ -834,13 +846,25 @@ r2_cl <- clmm(add.terms(formula(r2_c), "literacy"),
 summary_extract(r2_cl, "pos1:ori1")
 ```
 
- Pairwise comparisons (with Sidak adjustment) reveal that the main effect of position in charts with conventional y-axis orientations (E1) is replicated (z = `r printnum(r2_c_contrast.c.z.ratio)`, p `r printp(r2_c_contrast.c.p.value, add_equals = TRUE)`). Data points at higher positions were associated with higher probability ratings than data points at lower positions.
+```{r r2-clist, cache=TRUE, cache.comments=FALSE, eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-c"}
+r2_clist <- clmm(add.terms(formula(r2_c), "list_number"),
+                 data = risk2_tidy)
+#
+```
+
+```{r r2-clist-summary, echo=FALSE, include=FALSE}
+summary_extract(r2_clist, "pos1:ori1")
+```
+
+Pairwise comparisons (with Sidak adjustment) reveal that the main effect of position in charts with conventional y-axis orientations (E1) is replicated (z = `r printnum(r2_c_contrast.c.z.ratio)`, p `r printp(r2_c_contrast.c.p.value, add_equals = TRUE)`). Data points at higher positions were associated with higher probability ratings than data points at lower positions.
 
 There was no significant difference between ratings for data points plotted at different positions when inverted axes were used (`r z = printnum(r2_c_contrast.i.z.ratio)`, p `r printp(r2_c_contrast.i.p.value, add_equals = TRUE)`). Therefore, we observe a different pattern of results when an inverted axis is used, compared to when a conventional axis is used.
 
 Data points plotted at high physical positions were associated with higher ratings when a conventional axis was used than when an inverted axis was used (`r printnum(r2_c_contrast.h.z.ratio)`, p `r printp(r2_c_contrast.h.p.value, add_equals = TRUE)`). However, data points plotted at low physical positions were not associated with different ratings depending on the axis orientation (`r printnum(r2_c_contrast.l.z.ratio)`, p `r printp(r2_c_contrast.l.p.value, add_equals = TRUE)`).
 
 This suggests that differences in ratings for data points at different positions in physical space are not due to simple associations between vertical position and magnitude. The interaction also remained when controlling for participants' graph literacy scores: z = `r printnum(r2_cl.statistic)`, p `r printp(r2_cl.p.value, add_equals = TRUE)`.
+
+LIST COVARIATE: The interaction also remained when controlling for list number: z = `r printnum(r2_clist.statistic)`, p `r printp(r2_clist.p.value, add_equals = TRUE)`.
 
 ```{r r2-s, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r2_s <- buildclmm(severity_slider.response ~ pos*ori +
@@ -880,7 +904,24 @@ r2_sl <- clmm(add.terms(formula(r2_s), "literacy"),
 summary_extract(r2_sl, "ori1:pos1")
 ```
 
-There was also an interaction between physical position and axis orientation for severity magnitude ratings: ($\chi$^2^)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. However, the main effect in severity ratings from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as an additional fixed effect did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
+```{r r2-slist, cache=TRUE, cache.comments=FALSE, eval=TRUE, echo=FALSE, warning=FALSE, dependson="r2-s"}
+r2_slist <- clmm(add.terms(formula(r2_s), "list_number"),
+                 data = risk2_tidy)
+#
+```
+
+```{r r2-slist-summary, echo=FALSE, include=FALSE}
+summary_extract(r2_slist, "ori1:pos1")
+```
+
+```{r r2-s-str, echo=FALSE}
+add_header_above(kable(random_str(r2_s), "latex"), "r2_s")
+```
+
+There was also an interaction between physical position and axis orientation for severity magnitude ratings: ($\chi$^2^)(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. The model employed random intercepts for each scenario. Random intercepts were included for each participant, as well as slopes capturing differences in participants’ responses to data presented at different positions, different orientations, and the interaction between these. 
+Despite the interaction, the main effect in severity ratings from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`. There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). Modelling participants' graph literacy scores as an additional fixed effect did not eliminate this interaction: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`.
+
+LIST COVARIATE: The interaction also remained when controlling for list number: z = r printnum(r2_slist.statistic), p `r printp(r2_slist.p.value, add_equals = TRUE)`.
 
 ```{r r2-int-plot, fig.cap="Estimated marginal means (generated by our statistical model) for responses to data points at high and low physical positions, in charts with conventional and inverted axes. The slope for conventional charts differs from the slope of inverted charts. Thus, the effect of position on interpretation of magnitudes differs according to axis orientation. Translucent bars show 95\\% confidence intervals.", echo=FALSE, out.width="250px", fig.height=3.2}
 r2_c_emm %>%
@@ -999,7 +1040,11 @@ r3_cl <- clmm(add.terms(formula(r3_c), "literacy"),
 summary_extract(r3_cl, "condition1")
 ```
 
-A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: ($\chi$^2^)(`r in_paren(r3_c.df)`) = `r printnum(r3_c.LR)`, p `r printp(r3_c.p, add_equals = TRUE)`. Ratings were higher for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_cl.statistic)`, p `r printp(r3_cl.p.value, add_equals = TRUE)`).
+```{r r3-c-str, echo=FALSE}
+add_header_above(kable(random_str(r3_c), "latex"), "r3_c")
+```
+
+A likelihood ratio test reveals a significant difference between probability magnitude ratings for data points at different positions in inverted charts: ($\chi$^2^)(`r in_paren(r3_c.df)`) = `r printnum(r3_c.LR)`, p `r printp(r3_c.p, add_equals = TRUE)`. The model employed random intercepts for each scenario. Ratings were higher for data points presented at lower positions. This effect remained when adjusting for participants' graph literacy scores (z = `r printnum(r3_cl.statistic)`, p `r printp(r3_cl.p.value, add_equals = TRUE)`).
 
 ```{r r3-s, cache=TRUE, cache.comments= FALSE, eval=TRUE, echo=FALSE, include=FALSE, message=FALSE}
 r3_s <- buildclmm(severity_slider.response ~ condition + 
@@ -1029,7 +1074,11 @@ r3_sl <- clmm(add.terms(formula(r3_s), "literacy"),
 summary_extract(r3_sl, "condition1")
 ```
 
-There was no difference between severity magnitude ratings in inverted charts: $\chi$^2^(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`).
+```{r r3-s-str, echo=FALSE}
+add_header_above(kable(random_str(r3_s), "latex"), "r3_s")
+```
+
+There was no difference between severity magnitude ratings in inverted charts: $\chi$^2^(`r in_paren(r3_s.df)`) = `r printnum(r3_s.LR)`, p `r printp(r3_s.p, add_equals = TRUE)`. The model employed random intercepts for each scenario, plus random intercepts and by-position slopes for each participant. This outcome was replicated when adjusting for participants' graph literacy scores (z = `r printnum(r3_sl.statistic)`, p `r printp(r3_sl.p.value, add_equals = TRUE)`).
 
 ## Discussion
 
@@ -1074,7 +1123,7 @@ r3_c_emm %>%
 
 In the previous experiment (E2), we did not observe a significant difference between magnitude ratings for data points at different positions, for inverted graphs. We suggested that a false negative may have occurred in E2, due to insufficient experimental power to detect this difference. However, E3, with increased experimental power, demonstrates that such a difference is statistically significant.
 
-E2 involved switching between conventional and inverted charts, whereas E3 presented inverted charts in isolation. However, estimated marginal means, which capture the difference in ratings for values at different positions, are almost identical across these two experiments (E2: `r printnum(abs(r2_c_emm.hi-r2_c_emm.li))`; E3: `r printnum(abs(r3_c_emm.h-r3_c_emm.l))`), suggesting these charts were not treated differently in the different experiments. Therefore, the presence or absence of switching should not prohibit the use of E3's data in explaining the interaction in E2.
+E2 involved switching between conventional and inverted charts, whereas E3 presented inverted charts in isolation. However, the differences in estimated marginal means for inverted charts, which represent the differences in ratings for values at different positions, are almost identical for these two experiments (E2: `r printnum(abs(r2_c_emm.hi-r2_c_emm.li))`; E3: `r printnum(abs(r3_c_emm.h-r3_c_emm.l))`). This suggests inverted charts were not treated differently in the different experiments. Therefore, the presence or absence of switching should not prohibit the use of E3's data in explaining the interaction in E2.
 
 In light of this, we can interpret the significant interaction in E2 more easily. The same data points, presented at the same positions in a chart, will convey different magnitudes depending on how they compare to plausible values implied by blank space. Users do not draw upon simple associations between vertical position and magnitude, but recognise the context in which values are plotted.
 
@@ -1086,13 +1135,7 @@ When comparing data points within a single chart, it is appropriate to infer tha
 
 The impact of context on assessments of data is an example of a framing effect. We illustrate that this effect occurs in the absence of contrasting data points. The presence of blank space is sufficient for implying the relative status of plotted data.
 
-The present data complement findings from prior research on y-axis truncation, which reported that the choice of axis limits can impact interpretation of data. These results we report reinforce the notion that the amount of blank space surrounding plotted values influences users' impressions of those values. While previous investigations have shown that y-axis values affects the *comparison* of distinct values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *judgements* of values themselves.
-
-While previous investigations have shown that y-axis limits affect judgements of the *difference between* distinct values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect judgements of the *magnitude* of individual values.
-
-While previous investigations have shown that y-axis limits affect the *comparison* of values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *magnitude judgements*.
-
-While previous investigations have shown that y-axis limits affect *comparison judgements* (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *magnitude judgements*.
+The present data complement findings from prior research on y-axis truncation, which reported that the choice of axis limits can impact interpretation of data. These results we report reinforce the notion that the amount of blank space surrounding plotted values influences users' impressions of those values. While previous investigations have shown that y-axis limits affect *comparisons* between plotted values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *magnitude judgements*.
 
 A previous study addressing a similar question also concluded that a data point's location within a range of values affects interpretation of its magnitude (Sandman et al. 1994). The present set of experiments builds upon this research by identifying the mechanism behind this effect and removing the confound of variable axes ranges. It also extends the finding beyond a single scenario to a wider range of situations, and separately analyses specific judgements, rather than using a combined measure, to verify that different presentations affect judgements of the specific variable plotted in a chart.
 

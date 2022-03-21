@@ -9,7 +9,7 @@ output:
     template: template.tex
     citation_package: natbib
     fig_crop: no
-title: "Absence Makes The Chart Grow Stronger: Blank Space and Axis Range Influence Interpretations of Magnitude"
+title: "Absence Makes The Chart Grow Stronger: Blank Space and Axis Range Influence Interpretations of Magnitude in Risk Communication"
 index terms: "index terms here"
 author_footer1: "Author one is with Uni of X. Email: author1@uniofX.com"
 author_footer2: "Author two is with Uni of X. Email: author2@uniofX.com"
@@ -27,14 +27,15 @@ ACM_class_title: "title here"
 editor_options: 
   markdown: 
     wrap: 72
-bibliography: template.bib
+bibliography: bibliography.bib
+csl: ieee-transactions-on-visualization-and-computer-graphics.csl
 abstract: |
-  When visualizing data, chart designers have the freedom to choose the upper and lower limits of their numerical axes. Axis limits determine the physical position of plotted values, and can introduce substantial blank space. In three experiments, we demonstrate that the choice of axis limits affects viewers' interpretations of plotted values’ magnitudes. However, participants did not simply equate values presented at higher vertical positions with greater magnitudes. Instead, they used the numerical context supplied by axis limits to assess the magnitude of data points, in contrast to accompanying blank space. Data points were considered larger when they were numerically greater than the plausible values represented by blank space. Chart designers should consider what their axis range implies about the magnitude of plotted data points. We recommend displaying the range of relevant values in order to communicate the specific context for each dataset.
+  When visualizing data, chart designers have the freedom to choose the upper and lower limits of their numerical axes. Axis limits determine the physical positions of plotted values, and can introduce substantial blank space. For charts presenting data on the chance of negative events occuring, manipulating axis limits affects viewers' interpretations of plotted values' magnitudes, influencing understanding of the risk information being communicated. Across three experiments (total N=420), we demonstrate that, surprisingly, participants did not simply equate values presented at higher vertical positions with greater magnitudes. Instead, they used the numerical context supplied by axis limits to assess the magnitude of data points by contrasting these values against accompanying blank space. Data points were considered larger when they were numerically greater than the plausible values implied by blank space, *even* when they were presented at the *bottom* of a chart. Chart designers must consider the role of their axis range in viewers' interpretations of the magnitudes of plotted data points. We recommend displaying the range of relevant values in order to communicate the specific context for each dataset.
   
 introduction: |
   Context is crucial for effectively judging the magnitude of numbers. A 40% probability is twice as great as a 20% probability, but in the absence of context, it is unclear whether this value should be considered large or small. For the chance of experiencing post-surgery complications, 40% may be considered large, but may be considered small for the chance that a laboratory test can detect a disease.
   
-  In charts, numerical axes often provide some contextual cues for judging the magnitude of plotted values. The range of values on an axis provides a frame of reference for assessing whether a data point is numerically large or small. A bar chart produced by the New York Times, which plots over time the number of Black members of the U.S. senate, provides a striking illustration (Figure \@ref(fig:nyt-chart)). Unusually, the continuous y-axis does not terminate just above the highest plotted value. Instead, it extends all the way to the maximum possible number of senators: 100. As a result, bars representing Black senators are confined to the very bottom, visible just above the x-axis, and a significant expanse of blank space looms above them. This highlights the absent data points: the vast majority of senators who are not Black. The visual arrangement communicates the magnitude of the plotted values in context.
+  In charts, numerical axes often provide contextual cues for judging the magnitude of plotted values. The range of values on an axis provides a frame of reference for assessing whether a data point is numerically large or small. A bar chart produced by the New York Times, which plots over time the number of Black members of the U.S. senate, provides a striking illustration (Figure \@ref(fig:nyt-chart)). Unusually, the continuous y-axis does not terminate just above the highest plotted value. Instead, it extends all the way to the maximum possible number of senators: 100. As a result, bars representing Black senators are confined to the very bottom, visible just above the x-axis, and a significant expanse of blank space looms above them. This highlights the absent data points: the vast majority of senators who are not Black. The visual arrangement communicates the magnitude of the plotted values in context.
   
   It is unclear exactly how an axis range influences a viewer's inferences about magnitude. One possible explanation is that the unfilled area indicates the range of plausible values. That is, plotted values may be judged as small in magnitude because the potential for substantially larger values is clearly displayed. Alternatively, assessments of magnitude may be influenced by the appearance of plotted values only, and not through contrast with blank space. Viewers may simply judge data points at higher positions as 'high' and those lower down as 'low', regardless of any other cues which might communicate magnitude. The present set of experiments explores which of these two accounts explains how axis ranges contribute to the communication of magnitude.
 
@@ -125,18 +126,20 @@ edu_labels <- set_names(c('No formal qualications',
                    "data_mean",
                    "key_resp.rt",
                    "type",
-                   "list_number"))) %>% 
-      filter(type == "E") %>%
-        inner_join(literacy, by = "participant") %>%
+                   "list_number",
+                   "time_taken"))) %>% 
+    filter(type == "E") %>%
+    inner_join(literacy, by = "participant") %>%
     inner_join(demographics, by = "participant") %>%
-      mutate(across(matches(c("pos", "orientation", "condition", "list_number")), as_factor)) %>%
-  mutate(across(c("chance_slider.response",
+    mutate(across(matches(c("pos", "orientation", "condition", "list_number")), as_factor)) %>%
+    mutate(across(c("chance_slider.response",
                   "severity_slider.response"), as.ordered)) %>%
-  mutate(across(c("participant",
+    mutate(across(c("participant",
                   "item_no"), as.character)) %>%
-  rename("ori"= matches("orientation")) %>%
-  assign(paste0(unique(anon_file$expName), "_tidy"),
-         value = ., envir = .GlobalEnv)
+    mutate(time_taken = time_taken / 60) %>%
+    rename("ori"= matches("orientation")) %>%
+    assign(paste0(unique(anon_file$expName), "_tidy"),
+           value = ., envir = .GlobalEnv)
 }
 
 walk(list(risk1_anon,
@@ -306,7 +309,7 @@ random_str <- function(model) {
 ```
 
 ```{r nyt-chart, fig.cap= "In this chart, the y-axis limit is the largest possible value, rather than the largest observed value, so plotted values appear to have particularly small magnitudes.", echo=FALSE, out.width="250px"}
-knitr::include_graphics("figures/nyt-chart.png")
+knitr::include_graphics("images/nyt-chart.png")
 ```
 
 ## Effects of Context on Magnitude Judgments
@@ -315,7 +318,7 @@ Empirical evidence demonstrates that judgment of a value's magnitude can depend 
 
 ## Effects of Axis Limits on Comparison of Values
 
-Several studies have explored how axis limits can alter impressions of the *relationships between* presented values, rather than the magnitudes of values themselves. When axis ranges are expanded to create blank space around a cluster of data points, correlation between those points is judged as stronger (Cleveland, Diaconis, & McGill, 1982). In bar charts, participants rate the differences between values as greater when the vertical gap between bars is larger, due to a truncated y-axis (Pandey, Rall, Satterthwaite, Nov, & Bertini, 2015). Correll et al.'s (2020) experiments found that greater truncation resulted in higher effect-size judgments in both line charts and bar charts. Truncation effects persisted even when participants estimated the values of specific data points, suggesting this bias is driven by initial impressions, rather than a misinterpretation of the values portrayed by graphical markings. Correll et al. (2020) found no reduction in effect size judgments when truncation was communicated using graphical techniques (e.g., axis breaks and gradients). The unavoidable consequence, they suggest, is that designers' choices will influence viewers' interpretations whether axes are truncated or not.
+Several studies have explored how axis limits can alter impressions of the *relationships between* presented values, rather than the magnitudes of values themselves. When axis ranges are expanded to create blank space around a cluster of data points, correlation between those points is judged as stronger (Cleveland, Diaconis, & McGill, 1982). In bar charts, participants rate the differences between values as greater when the vertical gap between bars is larger, due to a truncated y-axis [@pandey_how_2015]. Correll et al.'s [-@correll_truncating_2020] experiments found that greater truncation resulted in higher effect-size judgments in both line charts and bar charts. Truncation effects persisted even when participants estimated the values of specific data points, suggesting this bias is driven by initial impressions, rather than a misinterpretation of the values portrayed by graphical markings. Correll et al. (2020) found no reduction in effect size judgments when truncation was communicated using graphical techniques (e.g., axis breaks and gradients). The unavoidable consequence, they suggest, is that designers' choices will influence viewers' interpretations whether axes are truncated or not.
 
 Choosing an appropriate axis range involves a trade-off between participants' bias (over-reliance on the visual appearance of differences) and their sensitivity (capacity to visually recognise actual differences). Just as a highly truncated y-axis can exaggerate trivial differences between values, an axis spanning the entire range of possible values can conceal important differences (Witt, 2019). Based on participants' judgments of effect size, Witt (2019) found that bias was reduced and sensitivity increased when using an axis range of approximately 1.5 standard deviations of the plotted data, compared to axes which spanned only the range of the data, or the full range of possible values. This provides further evidence of a powerful association between the appearance of data, when plotted, and subjective interpretations of differences between data points.
 
@@ -335,7 +338,7 @@ In a set of three experiments, we investigate how employing different axis limit
 
 All data visualizations used in the present set of experiments displayed the chance of negative events occuring. This provides participants with a purpose in the experiments; evaluating information in such risk scenarios is a more meaningful task than assessing, in an abstract manner, how 'large' a value is. Furthermore, charts are frequently used for the communication of such risks, and manipulating aspects of a chart can change interpretations of the risks displayed (Elting, Martin, Cantor, & Rubenstein, 1999; Feldman-Stewart, Kocovski, McConnell, Brundage, & Mackillop, 2000; Keller, Siegrist, & Visschers, 2009; Okan, Stone, Parillo, Bruine de Bruin, & Parker, 2020; Zikmund-Fisher, Fagerlin, & Ubel, 2005).
 
-Risk events are composed of two core components: 1) chance of occurrence and 2) outcome magnitude (severity). Individuals' assessments of chance and severity are not necessarily independent. An event is perceived as more likely when it is described as having more severe consequences (Harris & Corner, 2011, Harris et al., 2009). In a similar manner, an event is associated with more substantial consequences when it is described as more likely (Kupor & Laurin, 2020). One account suggests that perceptions of probability and outcome magnitude are related because they are both assumed to reflect the potency of the event's cause (probability-outcome correspondence principle; Keren & Teigen, 2001). According to this account, probabilities can occasionally provide meaningful indications of outcome magnitude (e.g., rainfall), but it is inappropriate to apply this perspective to all situations (e.g., volcanic eruptions). Therefore, even though charts in the present set of experiments only display the chance of events occurring, assessments of the severity of events' consequences may also differ between conditions. Collecting separate judgments of chance and severity of consequences for each scenario provides a clearer picture of how the manipulation affects distinct aspects of participants' representations of risk. Use of Likert scales (with discrete options) rather than visual analogue scales (with continuous options; Sung & Wu, 2018) prevents participants from simply mapping probability percentages directly onto a linear scale. We also administered a data visualization literacy measure, to determine the degree to which our manipulation(s) affect interpretations after accounting for differences in visualization literacy. Previous research has shown that responses to visualizations which violate graphical conventions by using atypical scales suggest individuals with lower visualization literacy are more likely to draw on data points' physical positions when making inferences about their magnitudes (Okan, Galesic, & Garcia-Retamero, 2016; Okan et al., 2012).
+Risk events are composed of two core components: 1) chance of occurrence and 2) outcome magnitude (severity). Individuals' assessments of chance and severity are not necessarily independent. An event is perceived as more likely when it is described as having more severe consequences (Harris & Corner, 2011, Harris et al., 2009). In a similar manner, an event is associated with more substantial consequences when it is described as more likely (Kupor & Laurin, 2020). One account suggests that perceptions of probability and outcome magnitude are related because they are both assumed to reflect the potency of the event's cause (probability-outcome correspondence principle; Keren & Teigen, 2001). According to this account, probabilities can occasionally provide meaningful indications of outcome magnitude (e.g., rainfall), but it is inappropriate to apply this perspective to all situations (e.g., volcanic eruptions). Therefore, even though charts in the present set of experiments only display the chance of events occurring, assessments of the severity of events' consequences may also differ between conditions. Collecting separate judgments of chance and severity of consequences for each scenario provides a clearer picture of how the manipulation affects distinct aspects of participants' representations of risk. Use of Likert scales (with discrete options) rather than visual analogue scales (with continuous options; Sung & Wu, 2018) prevents participants from simply mapping probability percentages directly onto a linear scale. We also administered a data visualization literacy measure, to determine the degree to which our manipulation(s) affect interpretations after accounting for differences in data visualization literacy. Previous research has shown that responses to visualizations which violate graphical conventions by using atypical scales suggest individuals with lower data visualization literacy are more likely to draw on data points' physical positions when making inferences about their magnitudes (Okan, Galesic, & Garcia-Retamero, 2016; Okan et al., 2012).
 
 ### Pre-Registration
 
@@ -365,8 +368,8 @@ Text and an accompanying chart were presented in each trial. Two sentences outli
 The accompanying dot plot displayed the chance (as a percentage) of a negative outcome occurring, for three options associated with the scenario (Figure \@ref(fig:example-charts)). The label 'Chance' was used instead of 'Probability' to avoid confusion with the standard 0-1 scale for probabilities, and to reflect casual usage.
 
 ```{r example-charts, fig.cap= "Example Charts. The 'high physical position' condition (left) presents data points near the top of the chart; the 'low physical position' condition (right) presents the same data points near the bottom of the chart.", echo=FALSE, out.width="250px"}
-img1 <- image_read("figures/E23_hi.png")
-img2 <- image_read("figures/E23_lo.png")
+img1 <- image_read("images/E23_hi.png")
+img2 <- image_read("images/E23_lo.png")
 image_append(c(img1, img2))
 ```
 
@@ -383,7 +386,7 @@ Two responses were required for each trial: a rating of the chance of the negati
 Each Likert scale had two anchors at its extremes, but all other points were unlabelled. The leftmost option in the 'chance' Likert scale was *'Very unlikely'*, and the rightmost option *'Very likely'*. The leftmost option in the 'severity' Likert scale was *'Very mild'* and the rightmost option *'Very severe'*. Likert scales appeared on the same screen as the text and chart (Figure \@ref(fig:example-trial)). Participants were permitted to change their responses as many times as they wished before proceeding to the next trial, but could not return to previous trials.
 
 ```{r example-trial, fig.cap= "Example Trial. Participants rated the chance and severity of negative outcomes in each trial.", echo=FALSE, out.width="250px"}
-knitr::include_graphics("figures/example_trial.png")
+knitr::include_graphics("images/example_trial.png")
 ```
 
 Attention check trials (n = 5) followed the same layout, with text, a chart, and Likert scales, but the task differed. Participants were instructed not to attend to the chart, and instead to provide specified responses on the Likert scales. For example:
@@ -408,13 +411,18 @@ age_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean
 gender_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% group_by(gender_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% pivot_wider(names_from = gender_slider.response, values_from = perc)
 
 literacy_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+
+# timing data was not available for one participant, and was over-estimated for another because submission was manually returned
+time_r1 <- distinct(risk1_tidy, participant, .keep_all = TRUE) %>% filter(time_taken < 300 & !is.na(time_taken)) %>% summarise(mean = mean(time_taken), sd = sd(time_taken))
 ```
 
 The experiment was advertised on Prolific.co, a platform for recruiting participants for online studies. A viral social media post on 24th July 2021 endorsing the website attracted many new users from a narrow demographic, skewing studies' participant distributions (Prolific, 2021), however, data for this experiment were collected prior to this. Normal or corrected-to-normal vision and English fluency were required for participation. 
 
-Data were returned by 160 participants. Per pre-registered exclusion criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^1]. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`), out of a maximum of 6. Participants whose submissions were approved were paid £3.55. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-18258).
+Data were returned by 160 participants. Per pre-registered exclusion criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. This left a total of 150 participants whose submissions were used for analysis (`r printnum(gender_r1$M)`% male, `r printnum(gender_r1$F)`% female, `r printnum(gender_r1$NB)`% non-binary). Mean age was `r printnum(age_r1$mean)` (*SD* = `r printnum(age_r1$sd)`)[^1]. The mean graph literacy score was `r printnum(literacy_r1$mean)` (*SD* = `r printnum(literacy_r1$sd)`), out of a maximum of 6. Participants whose submissions were approved were paid £3.55, and average completion time was `r printnum(time_r1$mean, digits = 0)` minutes [^2]. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-18258).
 
-[^1]: Age data failed to save for one participant, but was available for all other 149 participants in the dataset.
+[^1]: Age data was unavailable for one participant, but was available for all other participants in the dataset.
+
+[^2]: Timing data was unavailable for two participants, but was available for all other participants in the dataset.
 
 ## Analysis
 
@@ -617,7 +625,7 @@ Ratings of both the chance of an event occurring, and the severity of consequenc
 
 ## Introduction
 
-Experiment 1 (E1) found that participants associated data points with greater magnitudes when those data points were positioned near the *top* of a graph and substantial blank space appeared *below* them, compared to when the same data points were positioned near the *bottom* of a graph, with substantial blank space *above*.
+Experiment 1 (E1) found that participants associated data points with greater magnitudes when those data points were positioned near the *top* of a chart and substantial blank space appeared *below* them, compared to when the same data points were positioned near the *bottom* of a chart, with substantial blank space *above*.
 
 One possible explanation for this finding is that participants made simple associations between absolute position and magnitude, equating physically higher data points with larger magnitudes and physically lower data points with smaller magnitudes. This relates to well-established conceptual metaphors for magnitude, where greater vertical positions denote greater magnitudes (Tversky, 1997).
 
@@ -750,9 +758,9 @@ ctable <- compare_df(df_new = r2materials, df_old = r1materials, group_col = "sc
 create_output_table(ctable, limit = Inf)
 ```
 
-Two scenarios which were fillers in E1 were used as experimental scenarios[^2] and three additional scenarios were created. One filler scenario was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). This gave a total of 24 experimental scenarios, 12 filler scenarios, and 5 attention check questions (41 trials in total).
+Two scenarios which were fillers in E1 were used as experimental scenarios[^3] and three additional scenarios were created. One filler scenario was removed due to a concern about its quality (it concerned the risk to others as well as the risk to oneself). This gave a total of 24 experimental scenarios, 12 filler scenarios, and 5 attention check questions (41 trials in total).
 
-[^2]: For one of these scenarios, the mean of the plotted data was also modified.
+[^3]: For one of these scenarios, the mean of the plotted data was also modified.
 
 ### Procedure
 
@@ -776,11 +784,13 @@ gender_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% group_by(ge
 edu_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% group_by(edu_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% filter(edu_slider.response != 'No formal qualications' & edu_slider.response != 'Don\'t know / not applicable') %>% tally(perc)
 
 literacy_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+
+time_r2 <- distinct(risk2_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(time_taken), sd = sd(time_taken))
 ```
 
 The experiment was not advertised on Prolific.co to those who had participated in E1, or those who signed-up to Prolific.co after 24th July 2021 (due to the shift in participant demographics). Normal or corrected-to-normal vision and English fluency were required for participation.
 
-Data were returned by 129 participants. Per pre-registered exclusion criteria, five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded from the final dataset for the following reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20464).
+Data were returned by 129 participants. Per pre-registered exclusion criteria, five participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. Submissions from four other participants were excluded from the final dataset for the following reasons: maximum completion time (67 minutes) was exceeded (two participants); the submission constituted second attempt following a saving error on first attempt (one participant); data were collected prior to pre-registration (one participant). This left a total of 120 participants whose submissions were used in the analysis (`r printnum(gender_r2$M)`% male, `r printnum(gender_r2$F)`% female). Mean age was `r printnum(age_r2$mean)` (*SD* = `r printnum(age_r2$sd)`). `r printnum(edu_r2$n, digits = 0)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r2$mean)` (*SD* = `r printnum(literacy_r2$sd)`). Participants whose submissions were approved were paid £2.37, and average completion time was `r printnum(time_r2$mean, digits = 0)` minutes. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20464).
 
 ## Analysis
 
@@ -957,7 +967,7 @@ summary_extract(r2_slist, "ori1:pos1")
 add_header_above(kable(random_str(r2_s), "latex"), "r2_s")
 ```
 
-There was also an interaction between physical position and axis orientation for ratings of the severity of consequences: $\chi$^2^(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. This model employed random intercepts for each scenario. Random intercepts were included for each participant, as well as slopes capturing differences in participants’ responses to data presented at different positions, different orientations, and the interaction between these. Despite the interaction, the main effect in severity ratings from E1, different responses to data points at different positions in conventional graphs, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`). There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high physical positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). The interaction remained when controlling for graph literacy: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`, and when controlling for list number: z = `r printnum(r2_slist.statistic)`, p `r printp(r2_slist.p.value, add_equals = TRUE)`.
+There was also an interaction between physical position and axis orientation for ratings of the severity of consequences: $\chi$^2^(`r in_paren(r2_s.df)`) = `r printnum(r2_s.LR)`, p `r printp(r2_s.p, add_equals = TRUE)`. This model employed random intercepts for each scenario. Random intercepts were included for each participant, as well as slopes capturing differences in participants’ responses to data presented at different positions, different orientations, and the interaction between these. Despite the interaction, the main effect in severity ratings from E1, different responses to data points at different positions in conventional charts, was not replicated (`r printnum(r2_s_contrast.c.z.ratio)`, p `r printp(r2_s_contrast.c.p.value, add_equals = TRUE)`). There was also no evidence of different responses to data points at different positions in inverted charts (`r printnum(r2_s_contrast.i.z.ratio)`, p `r printp(r2_s_contrast.i.p.value, add_equals = TRUE)`). This interaction appears to be driven by a weak and likely spurious difference between ratings for data points at high physical positions in inverted and conventional charts (`r printnum(r2_s_contrast.h.z.ratio)`, p `r printp(r2_s_contrast.h.p.value, add_equals = TRUE)`). The interaction remained when controlling for graph literacy: z = `r printnum(r2_sl.statistic)`, p `r printp(r2_sl.p.value, add_equals = TRUE)`, and when controlling for list number: z = `r printnum(r2_slist.statistic)`, p `r printp(r2_slist.p.value, add_equals = TRUE)`.
 
 ```{r r2-ct, include=FALSE, cache=TRUE}
 r2_ct <- threshold(r2_c)
@@ -1010,7 +1020,7 @@ r2_c_emm %>%
 
 ## Discussion
 
-In E1, when using conventional graphs only, we found that displaying data within different axis limits affected magnitude judgments. However, it was unclear whether judgments were based on data points' absolute positions, or their positions relative to blank space, because both would generate similar interpretations. Therefore, in E2, for half of trials, we reversed the mapping of values in physical space, so these two features would imply different magnitudes for a given value.
+In E1, when using conventional charts only, we found that displaying data within different axis limits affected magnitude judgments. However, it was unclear whether judgments were based on data points' absolute positions, or their positions relative to blank space, because both would generate similar interpretations. Therefore, in E2, for half of trials, we reversed the mapping of values in physical space, so these two features would imply different magnitudes for a given value.
 
 In E2, we replicated the primary finding from E1. In charts with conventional axis orientations, the same data points elicited different chance judgments when presented at different positions. These differences were consistent with magnitudes implied by data points' absolute positions and their positions relative to blank space. However, in charts with inverted axis orientations, the same pattern was not observed. Therefore, we can conclude that interpretations of magnitude are affected by a chart's physical arrangement of values. The pattern of differences in magnitude judgments for data points presented at distinct physical positions depends on how axes are oriented.
 
@@ -1052,13 +1062,15 @@ gender_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% group_by(ge
 edu_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% group_by(edu_slider.response) %>% summarise(perc = n()/nrow(.)*100) %>% filter(edu_slider.response != 'No formal qualications' & edu_slider.response != 'Don\'t know / not applicable') %>% tally(perc)
 
 literacy_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(literacy), sd = sd(literacy))
+
+time_r3 <- distinct(risk3_tidy, participant, .keep_all = TRUE) %>% summarise(mean = mean(time_taken), sd = sd(time_taken))
 ```
 
 The experiment was not advertised on Prolific.co to those who had participated in E1 or E2, or those who signed-up to Prolific.co after 24th July 2021. Normal or corrected-to-normal vision and English fluency were required for participation.
 
-Data were returned by 161 participants. Per pre-registered exclusion criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^3]. `r printnum(edu_r3$n)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20745).
+Data were returned by 161 participants. Per pre-registered exclusion criteria, 10 participants' submissions were rejected because they answered more than two of 10 attention check questions incorrectly. One additional participant was excluded from the final dataset because they exceeded the maximum completion time (87 minutes). This left a total of 150 participants whose submissions were used for analysis: (`r printnum(gender_r3$M)`% male, `r printnum(gender_r3$F)`% female). Mean age was `r printnum(age_r3$mean)` (*SD* = `r printnum(age_r3$sd)`)[^4]. `r printnum(edu_r3$n, digits = 0)`% had completed at least secondary education. The mean graph literacy score was `r printnum(literacy_r3$mean)` (*SD* = `r printnum(literacy_r3$sd)`). Participants whose submissions were approved were paid £3.45, and average completion time was `r printnum(time_r3$mean, digits = 0)` minutes. Ethical approval was granted by The University of Manchester's Division of Neuroscience & Experimental Psychology Ethics Committee (Ref. 2021-11115-20745).
 
-[^3]: Age data failed to save for two participants, but was available for all other 148 participants in the dataset.
+[^4]: Age data was unavailable for two participants, but was available for all other participants in the dataset.
 
 ## Analysis
 
@@ -1118,7 +1130,7 @@ r3_c_emm %>%
   geom_point(position = position_dodge(width = 0.1), size = 3) +
   geom_line(position = position_dodge(width = 0.1),
             size = 2) +
-  lims(y = c(-1.8, 2)) +
+  lims(y = c(-2, 2)) +
   labs(y = "Estimated\nMarginal Mean",
        x = "Physical Position",
        title = "Experiment 3:\nRatings of Data Points' Magnitudes (Modeled)") +
@@ -1194,7 +1206,7 @@ r3_c_emm.h <- r3_c_emm %>% filter(condition == "hi") %>% pull(emmean)
 r3_c_emm.l <- r3_c_emm %>% filter(condition == "lo") %>% pull(emmean)
 ```
 
-In the previous experiment (E2), we did not observe a significant difference between magnitude ratings for data points at different positions in inverted graphs. We suggested that this may have been a false negative due to insufficient experimental power to detect a difference. However, E3, with increased experimental power, demonstrates that such a difference is statistically significant.
+In the previous experiment (E2), we did not observe a significant difference between magnitude ratings for data points at different positions in inverted charts, although the pattern was consistent with the use of blank space in the interpretation of the plotted data. However, E3, with increased experimental power, demonstrates that such a difference is statistically significant.
 
 E2 involved switching between conventional and inverted charts, whereas E3 presented inverted charts in isolation. However, the differences in estimated marginal means for inverted charts, which represent the differences in ratings of data points' magnitudes when presented at different positions, are almost identical for these two experiments (E2: `r printnum(abs(r2_c_emm.hi-r2_c_emm.li))`; E3: `r printnum(abs(r3_c_emm.h-r3_c_emm.l))`). This suggests inverted charts were not treated differently in the different experiments. Therefore, the presence or absence of switching should not prohibit the use of E3's data in explaining E2's interaction.
 
@@ -1202,13 +1214,13 @@ In light of this, we can interpret the results of E2 more easily. The same data 
 
 # General Discussion
 
-Over three experiments, we demonstrate how judgments of data points' magnitudes are influenced by the presence of blank space in a chart. Regardless of their physical positions, data points were associated with greater magnitudes when they were numerically greater than the plausible values represented by blank space. This was observed for charts with both conventional and inverted axes. This highlights viewers' sensitivity to context in interpretation of information in data visualizations, suggesting designers should consider this aspect when creating charts.
+Over three experiments, we demonstrate how judgments of data points' magnitudes are influenced by the presence of blank space in a chart. Regardless of their physical positions, data points were associated with greater magnitudes when they were numerically greater than the plausible values represented by blank space. This was observed for charts with both conventional and inverted axes. This highlights viewers' sensitivity to context in the interpretation of information in data visualizations, suggesting designers should consider this aspect when creating charts.
 
 When comparing data points within a single chart, it is appropriate to infer that data points which appear at different positions between two axis limits have distinct magnitudes. The results we report indicate that magnitude judgments can vary when *the same value* appears at different positions between two axis limits. Interpretation of an absolute value is biased by its relative position. 
 
 The impact of surrounding information on assessments of data is an example of a framing effect. We illustrate that this effect occurs in the absence of contrasting data points: the presence of blank space is sufficient for implying the relative status of plotted data.
 
-The present data complement findings from prior research on y-axis truncation, which has found that the choice of axis limits can impact interpretation of data. These results we report reinforce the notion that the amount of blank space surrounding plotted values influences viewers' impressions of those values. While previous investigations have shown that y-axis limits affect *comparisons* of plotted values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *magnitude judgments*.
+The present data complement findings from prior research on y-axis truncation, which has found that the choice of axis limits can impact interpretation of data. The results we report reinforce the notion that the amount of blank space surrounding plotted values influences viewers' impressions of those values. While previous investigations have shown that y-axis limits affect *comparisons* of plotted values (e.g., Correll et al., 2020; Pandey et al., 2015; Witt, 2019; Yang et al., 2021), the present findings show that they also affect *magnitude judgments*.
 
 A previous study addressing a similar question also concluded that a data point's location within a range of values affects interpretation of its magnitude (Sandman et al. 1994). The present set of experiments builds upon this research by identifying the mechanism behind this effect and removing the confound of variable axes ranges. It also extends the finding beyond a single scenario to a wider range of situations, and separately analyses specific judgments, rather than using a combined measure, to verify that different presentations affect judgments of the specific variable plotted in a chart.
 
@@ -1222,7 +1234,7 @@ Adjusting for data visualization literacy did not remove the influence of axis r
 
 ## Implications for Visualization Design
 
-This finding highlights an opportunity for data visualization designers to creatively construct axes for dramatic effect. Introducing blank space when setting axis limits allows designers to persuasively convey large or small magnitudes. However, even those avoiding creative use of blank space should be sensitive to our finding that axis ranges are likely to be considered representative of relevant values for assessing the magnitude of plotted data. Designers should consider what is *not* plotted and reflect on the impression(s) of magnitude resulting from their choice of axis limits. To avoid misleading displays, axes should present appropriate values. Like Correll et al. (2020), we acknowledge that there is no objectively correct method for achieving this. Ultimately, the designer decides what context is appropriate, based on the chart's purpose and content. This may involve taking account of historical data, comparable scenarios, established baselines, current objectives, *etc.*. Our findings are also relevant for assessing the quality of data visualizations; one should consider whether a chart appropriately portrays magnitude, in addition to standard considerations.
+This finding highlights an opportunity for data visualization designers to creatively construct axes for dramatic effect. Introducing blank space when setting axis limits allows designers to persuasively convey large or small magnitudes. However, even those avoiding creative use of blank space should be sensitive to our finding that axis ranges are likely to be considered representative of relevant values for assessing the magnitude of plotted data. Designers should consider what is *not* plotted and reflect on the impression(s) of magnitude resulting from their choice of axis limits. To avoid misleading displays, axes should present appropriate values. Like Correll et al. (2020), we acknowledge that there is no objectively correct method for achieving this. Ultimately, the designer decides what context is appropriate, based on the chart's purpose and content. This may involve taking into account historical data, comparable scenarios, established baselines, current objectives, *etc.*. Our findings are also relevant for assessing the quality of data visualizations; one should consider whether a chart appropriately portrays magnitude, in addition to standard considerations.
 
 Setting an axis range that extends far beyond the range of the plotted data impacts discrimination ability (Witt, 2019), and may distract attention from meaningful variance within the data. Witt recommends setting an axis range to 1.5-2 times the plotted data's standard deviation. This guidance is broadly consistent with our suggestions in its recommendation that axis limits should take into account relevant values to provide context. The present experiment has demonstrated that magnitude is communicated by the relative position of data points within the space of all plausible values. 
 
@@ -1234,12 +1246,12 @@ To avoid likelihood of misinterpretation, participants were given instructions o
 
 In addition to associations between vertical position and magnitude, vertical position is also a common conceptual metaphor for emotional valence. Lower physical positions are typically associated with negative valence and higher physical positions with positive valence. Woodin et al. (2021) found that comprehension is facilitated when the physical arrangement of data is consistent with the conceptual metaphor for valence, but that associations between vertical position and numerical magnitude affect interpretations more strongly. In the present set of experiments, charts displayed negative outcomes, so data were aligned with the conceptual metaphor for valence in inverted charts, and misaligned in conventional charts. Participants evidently did not use valence metaphors to interpret values in conventional charts; this would have produced the opposite pattern of results to those observed. The simplest explanation for our results is that participants relied on relative position when interpreting both conventional and inverted charts, rather than sometimes generating inferences based on a conceptual metaphor for valence.
 
-In analyses employing graph literacy as a covariate, graph literacy scores were calculated as the average of five Likert scale responses. This means that responses to graph literacy questions were modeled as continuous data, whereas Likert scale ratings from experimental trials were modeled as ordinal data. This approach was used by the scale's developers (Garcia-Retamero et al., 2016), but is unlikely to be the most appropriate method.
+In analyses employing graph literacy as a covariate, graph literacy scores were calculated as the average of five Likert scale responses. This means that responses to graph literacy questions were modeled as continuous data, whereas Likert scale ratings from experimental trials were modeled as ordinal data. This approach was used by the scale's developers (Garcia-Retamero et al., 2016), but is not the most appropriate method (Liddel & Kruscke, 2018).
 
 ## Conclusion
 
 The position of data points in a chart affects interpretation of how big or small their values are. We demonstrate that this relationship between physical position and inferences about magnitude critically depends on whether accompanying blank space represents higher or lower alternatives to the plotted data. Viewers take into account the context in which data appears, even when comparison values are not explicitly displayed. Axis limits and blank space warrant consideration from data visualization designers.
 
-# Acknowledgements
+# Acknowledgments {-}
 
 Duncan Bradley was supported by the Economic and Social Research Council (Grant Number ES/P000665/1). This work was supported in part by a BPS Cognitive Section Postgraduate Rapid Project Grant. We thank Jen McBride and Paul Warren for comments on an earlier draft, and Paul Stott for assistance with manuscript formatting. 

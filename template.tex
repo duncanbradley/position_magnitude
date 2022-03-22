@@ -56,6 +56,7 @@
 \usepackage{tabu}                      % only used for the table example
 \usepackage{booktabs}                  % only used for the table example
 \usepackage[numbers]{natbib}                    % for citations
+\usepackage{anyfontsize}              % 
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
 %% with other math-related packages, you may want to disable it.
@@ -94,7 +95,7 @@
 \authorfooter{
 %% insert punctuation at end of each item
 \item{$author_footer1$}
-\item{$author_footer1$}
+\item{$author_footer2$}
 \item{$author_footer3$}
 }
 
@@ -155,13 +156,15 @@
 
 $body$
 
+\setlength{\bibsep}{0.0pt}
+
 %\bibliographystyle{bib_styles/abbrv}
-\bibliographystyle{bib_styles/abbrvnat}
+\bibliographystyle{bib_styles/abbrvnatdoi}
 %\bibliographystyle{bib_styles/abbrv-doi}
 %\bibliographystyle{bib_styles/abbrv-doi-narrow}
 %\bibliographystyle{bib_styles/abbrv-doi-hyperref}
 %\bibliographystyle{bib_styles/abbrv-doi-hyperref-narrow}
 
-\bibliography{template}
+{\fontsize{8pt}{9.6pt}\selectfont \bibliography{bibliography}}
 \end{document}
 

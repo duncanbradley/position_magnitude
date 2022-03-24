@@ -39,6 +39,8 @@ Files used in manuscript generation:
   + `bib_styles` folder for bibliography formatting styles
   + `makefile` and `vgtc.cls` for output rendering
 
+Knitting the .Rmd file will output `position_magntude.pdf`.
+
 ## Experiment Code and Materials
 
 The experimental code and materials, plus links to run the experiments in your browser, are available here:

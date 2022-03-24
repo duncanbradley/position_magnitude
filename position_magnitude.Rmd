@@ -8,7 +8,7 @@ output:
     citation_package: natbib
     fig_crop: no
 title: "Absence Makes The Chart Grow Stronger: Blank Space and Axis Range Influence Interpretations of Magnitude in Risk Communication"
-index_terms: "Cognition, framing effects, chart design, axis range, magnitude judgements."
+index_terms: "Data cognition, framing effects, chart design, axis range, magnitude judgements."
 author_footer1: "Duncan Bradley is with the Division of Neuroscience and Experiment Psychology, The University of Manchester, UK. Email: duncan.bradley\\@manchester.ac.uk."
 author_footer2: "Gabriel Strain and Caroline Jay are with the Department of Computer Science, The University of Manchester, UK. Email: {gabriel.strain | caroline.jay}\\@manchester.ac.uk."
 author_footer3: "Andrew J. Stewart is with the Division of Neuroscience and Experiment Psychology and the Department of Computer Science, The University of Manchester, UK. Email: andrew.stewart\\@manchester.ac.uk."
@@ -54,10 +54,10 @@ library(kableExtra)
 ```
 
 ```{r eval-models, include=FALSE}
-# in this script, computationally expensive models are cached 
-# choose whether to check the cache for during model evaluation, and load cached models automatically: eval_models <- TRUE (does not work in Docker)
-# or turn off model evaluation and load the existing cache manually: eval_models <- FALSE (choose this option on Docker)
-eval_models <- TRUE
+# in this script, computationally intensive models are cached 
+# choose whether to check the cache for during model evaluation, and load cached models automatically: eval_models <- TRUE (will rebuild models from scratch)
+# or turn off model evaluation and load the existing cache manually: eval_models <- FALSE
+eval_models <- FALSE
 
 if (eval_models == FALSE){
   lazyload_cache_dir('position_magnitude_cache/latex')
@@ -357,11 +357,11 @@ depend on its relationship to a grand total or to surrounding values.
 This can influence interpretation of verbal approximations, and also
 absolute values. For example, participants instructed to take 'a few'
 marbles picked up more when the total number available was larger
-([@borges_common_1974]) and rated satisfaction with the same salary as
+[@borges_common_1974] and rated satisfaction with the same salary as
 higher when it appeared in the upper end of a range, compared to the
 lower end [@brown_does_2008]. 
 
-## Effects of Axis Limits on Comparison of Values
+## Effects of Axis Limits on Comparison Judgements
 
 Several studies have explored how axis limits can alter impressions of
 the *relationships between* presented values, rather than the magnitudes
@@ -449,7 +449,7 @@ read_csv("images/senators.csv") %>%
   geom_hline(yintercept = 0)
 ```
 
-## Effects of Axis Limits on Extraction of Values
+## Effects of Axis Limits on Magnitude Judgements
 
 The above research consistently demonstrates that the magnitude of *the
 difference between values* is interpreted differently depending on the
@@ -548,7 +548,7 @@ points' physical positions when making inferences about their magnitudes
 
 ### Open Research Statement
 
-This research has been conducted following the principles of open and reproducible research. All data and analysis code is available at -github link-. This link also provides all necessary resources for running a Docker container, within which the computational environment used for analysis is recreated, meaning a fully-reproducible version of the present report can be generated.
+This research has been conducted following the principles of open and reproducible research. All data and analysis code is available at https://duncanbradley.github.com/position_magnitude/tree/ieee_vis_22. This link also provides all necessary resources for running a Docker container, within which the computational environment used for analysis is recreated, meaning a fully-reproducible version of this paper can be generated.
 
 All experiments in this paper were pre-registered (https://osf.io/qn46s/). There are no diversions from pre-registered experimental designs, exclusion criteria
 or sample size. However, the reported analyses differ in some respects
@@ -587,7 +587,7 @@ We predicted that ratings of data points'
 magnitudes (chance of occurrence) and/or ratings of the severity of
 consequences would be greater when data points were presented at higher
 physical positions, compared to when the same data points were presented
-at lower positions. Experimental code and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE1.
+at lower positions. Experimental code, materials and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE1.
 
 ## Methods
 
@@ -630,7 +630,7 @@ of the chart.
 
 ### Procedure
 
-The experiment was programmed in PsychoPy (version 2021.1.4; [@peirce_psychopy2_2019]) and hosted on
+The experiment was programmed in PsychoPy (version 2021.1.4, [@peirce_psychopy2_2019]) and hosted on
 pavlovia.org. Participants were instructed to complete the experiment on
 a desktop computer or laptop, not a tablet or mobile phone. After
 providing informed consent, participants submitted their age and gender,
@@ -752,9 +752,7 @@ Neuroscience & Experimental Psychology Ethics Committee (Ref.
 
 ## Analysis
 
-Analyses were conducted using R (version 4.1.2, [@r_core_team_r_2021]). Raw
-data and analysis scripts are available at
-<https://github.com/duncanbradley/position_magnitude>.
+Analyses were conducted using R (version 4.1.2, [@r_core_team_r_2021]).
 
 Likert scales only express granularity at the level of ordinal data.
 They record whether one rating is higher or lower than than another, but
@@ -868,7 +866,7 @@ points were presented at low physical positions (z =
 `r printnum(abs(r1_c.statistic))`, p
 `r printp(r1_c.p.value, add_equals = TRUE)`). This model employed random
 intercepts for each scenario and each participant. Estimated marginal
-means, calculated using the *emmeans* package (version 1.7.0, [@lenth_emmeans_2021] for these ratings are plotted in Figure @ref(fig:r1-c-emm-plot).
+means, calculated using the *emmeans* package (version 1.7.0, [@lenth_emmeans_2021]) for these ratings are plotted in Figure \@ref(fig:r1-c-emm-plot).
 
 ```{r r1-s, cache=eval_models, cache.comments=FALSE, eval=eval_models, echo=FALSE, include=FALSE, message=FALSE}
 # E1 severity rating model
@@ -1237,7 +1235,7 @@ at *higher* physical positions (and therefore no difference compared to
 conventional charts). Alternatively, use of position relative to blank
 space would be indicated by greater magnitude ratings for data points at
 *lower* physical positions (and therefore the opposite pattern compared
-to conventional charts). Experimental code and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE2.
+to conventional charts). Experimental code, materials and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE2.
 
 ## Method
 
@@ -1725,7 +1723,7 @@ position would be indicated by higher magnitude ratings for data points
 at *high* physical positions (mirroring the finding for conventional
 charts). Alternatively, use of position relative to blank space would be
 indicated by higher magnitude ratings for data points at *low* physical
-positions (the reverse of the finding for conventional charts). Experimental code and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE3.
+positions (the reverse of the finding for conventional charts). Experimental code, materials and a link to run the experiment are available at https://gitlab.pavlovia.org/ExPrag_UoM/riskE3.
 
 ## Method
 

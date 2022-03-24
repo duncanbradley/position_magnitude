@@ -108,7 +108,7 @@
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{Cognition, framing effects, chart design, axis range, magnitude judgements.}
+\keywords{Data cognition, framing effects, chart design, axis range, magnitude judgements.}
 
 %% ACM Computing Classification System (CCS).
 %% See <http://www.acm.org/class/1998/> for details.
@@ -154,7 +154,7 @@
 
 {Context is crucial for effectively judging the magnitude of numbers. A 40\% probability is twice as great as a 20\% probability, but in the absence of context, it is unclear whether this value should be considered large or small. For the chance of experiencing post-surgery complications, 40\% may be considered large, but may be considered small for the chance that a laboratory test can detect a disease.
 
-In charts, numerical axes often provide contextual cues for judging the magnitude of plotted values. The range of values on an axis provides a frame of reference for assessing whether a data point is numerically large or small. Figure \ref{fig:senators-chart} (a reproduction of a bar chart from the New York Times), which plots over time the number of Black members of the U.S. senate \citep{history_art__archives_us_house_of_representatives_office_of_the_historian_black-american_nodate}, provides a striking illustration. Unusually, the continuous y-axis does not terminate just above the highest plotted value. Instead, it extends all the way to the maximum possible number of senators: 100. As a result, bars representing Black senators are confined to the very bottom, visible just above the x-axis, and a significant expanse of blank space looms above them. This highlights the absent data points: the vast majority of senators who are not Black. The visual arrangement communicates the magnitude of the plotted values in context.
+In charts, numerical axes often provide contextual cues for judging the magnitude of plotted values. The range of values on an axis provides a frame of reference for assessing whether a data point is numerically large or small. Figure \ref{fig:senators-chart} (a reproduction of a similar bar chart from the New York Times), which plots over time the number of Black members of the U.S. senate \citep{history_art__archives_us_house_of_representatives_office_of_the_historian_black-american_nodate}, provides a striking illustration. Unusually, the continuous y-axis does not terminate just above the highest plotted value. Instead, it extends all the way to the maximum possible number of senators: 100. As a result, bars representing Black senators are confined to the very bottom, visible just above the x-axis, and a significant expanse of blank space looms above them. This highlights the absent data points: the vast majority of senators who are not Black. The visual arrangement communicates the magnitude of the plotted values in context.
 
 It is unclear exactly how an axis range influences a viewer's inferences about magnitude. One possible explanation is that the unfilled area indicates the range of plausible values. That is, plotted values may be judged as small in magnitude because the potential for substantially larger values is clearly displayed. Alternatively, viewers' assessments may be influenced by the appearance of plotted values only, and not by contrast with blank space. Viewers may simply interpret the magnitude of data points at higher positions as `high' and those at lower position as `low', ignoring the plausible alternative values implied by blank space. The present set of experiments explores which of these two accounts explains how axis ranges contribute to the communication of magnitude.}
 
@@ -166,12 +166,12 @@ depend on its relationship to a grand total or to surrounding values.
 This can influence interpretation of verbal approximations, and also
 absolute values. For example, participants instructed to take `a few'
 marbles picked up more when the total number available was larger
-(\citep{borges_common_1974}) and rated satisfaction with the same salary as
+\citep{borges_common_1974} and rated satisfaction with the same salary as
 higher when it appeared in the upper end of a range, compared to the
 lower end \citep{brown_does_2008}.~
 
-\hypertarget{effects-of-axis-limits-on-comparison-of-values}{%
-\subsection{Effects of Axis Limits on Comparison of Values}\label{effects-of-axis-limits-on-comparison-of-values}}
+\hypertarget{effects-of-axis-limits-on-comparison-judgements}{%
+\subsection{Effects of Axis Limits on Comparison Judgements}\label{effects-of-axis-limits-on-comparison-judgements}}
 
 Several studies have explored how axis limits can alter impressions of
 the \emph{relationships between} presented values, rather than the magnitudes
@@ -230,8 +230,8 @@ inspection \citep{yang_truncating_2021}.
 \includegraphics[width=250px]{position_magnitude_files/figure-latex/senators-chart-1} \caption{In this chart, the y-axis limit is the largest possible value, rather than the largest observed value, so plotted values appear to have particularly small magnitudes.}\label{fig:senators-chart}
 \end{figure}
 
-\hypertarget{effects-of-axis-limits-on-extraction-of-values}{%
-\subsection{Effects of Axis Limits on Extraction of Values}\label{effects-of-axis-limits-on-extraction-of-values}}
+\hypertarget{effects-of-axis-limits-on-magnitude-judgements}{%
+\subsection{Effects of Axis Limits on Magnitude Judgements}\label{effects-of-axis-limits-on-magnitude-judgements}}
 
 The above research consistently demonstrates that the magnitude of \emph{the
 difference between values} is interpreted differently depending on the
@@ -328,6 +328,8 @@ points' physical positions when making inferences about their magnitudes
 \hypertarget{open-research-statement}{%
 \subsubsection{Open Research Statement}\label{open-research-statement}}
 
+This research has been conducted following the principles of open and reproducible research. All data and analysis code is available at \url{https://duncanbradley.github.com/position_magnitude/tree/ieee_vis_22}. This link also provides all necessary resources for running a Docker container, within which the computational environment used for analysis is recreated, meaning a fully-reproducible version of this paper can be generated.
+
 All experiments in this paper were pre-registered (\url{https://osf.io/qn46s/}). There are no diversions from pre-registered experimental designs, exclusion criteria
 or sample size. However, the reported analyses differ in some respects
 from the pre-registered protocol. For full transparency, we outline
@@ -367,7 +369,7 @@ We predicted that ratings of data points'
 magnitudes (chance of occurrence) and/or ratings of the severity of
 consequences would be greater when data points were presented at higher
 physical positions, compared to when the same data points were presented
-at lower positions.
+at lower positions. Experimental code, materials and a link to run the experiment are available at \url{https://gitlab.pavlovia.org/ExPrag_UoM/riskE1}.
 
 \hypertarget{methods}{%
 \subsection{Methods}\label{methods}}
@@ -412,7 +414,7 @@ of the chart.
 \hypertarget{procedure}{%
 \subsubsection{Procedure}\label{procedure}}
 
-The experiment was programmed in PsychoPy (version 2021.1.4; \citep{peirce_psychopy2_2019}) and hosted on
+The experiment was programmed in PsychoPy (version 2021.1.4, \citep{peirce_psychopy2_2019}) and hosted on
 pavlovia.org. Participants were instructed to complete the experiment on
 a desktop computer or laptop, not a tablet or mobile phone. After
 providing informed consent, participants submitted their age and gender,
@@ -519,9 +521,7 @@ Neuroscience \& Experimental Psychology Ethics Committee (Ref.
 \hypertarget{analysis}{%
 \subsection{Analysis}\label{analysis}}
 
-Analyses were conducted using R (version 4.1.2, \citep{r_core_team_r_2021}). Raw
-data and analysis scripts are available at
-\url{https://github.com/duncanbradley/position_magnitude}.
+Analyses were conducted using R (version 4.1.2, \citep{r_core_team_r_2021}).
 
 Likert scales only express granularity at the level of ordinal data.
 They record whether one rating is higher or lower than than another, but
@@ -563,7 +563,7 @@ points were presented at low physical positions (z =
 8.57, p
 \textless{} .001). This model employed random
 intercepts for each scenario and each participant. Estimated marginal
-means, calculated using the \emph{emmeans} package (version 1.7.0, \citep{lenth_emmeans_2021} for these ratings are plotted in Figure \citet{ref}(fig:r1-c-emm-plot).
+means, calculated using the \emph{emmeans} package (version 1.7.0, \citep{lenth_emmeans_2021}) for these ratings are plotted in Figure \ref{fig:r1-c-emm-plot}.
 
 For ratings of the severity of consequences, a likelihood ratio test
 reveals that a model including physical position as a fixed effect
@@ -724,7 +724,7 @@ at \emph{higher} physical positions (and therefore no difference compared to
 conventional charts). Alternatively, use of position relative to blank
 space would be indicated by greater magnitude ratings for data points at
 \emph{lower} physical positions (and therefore the opposite pattern compared
-to conventional charts).
+to conventional charts). Experimental code, materials and a link to run the experiment are available at \url{https://gitlab.pavlovia.org/ExPrag_UoM/riskE2}.
 
 \hypertarget{method}{%
 \subsection{Method}\label{method}}
@@ -749,7 +749,7 @@ questions (41 trials in total).
 \hypertarget{procedure-1}{%
 \subsubsection{Procedure}\label{procedure-1}}
 
-The experiment was programmed in PsychoPy (version 2021.2.3 \citet{peirce_psychopy2_2019}). Participants specified the highest level of education they had received,
+The experiment used PsychoPy version 2021.2.3. Participants specified the highest level of education they had received,
 in addition to answering demographic questions on age and gender. An
 additional slide in the instructions explained how to identify and
 interpret the different axis orientations, and encouraged participants
@@ -958,7 +958,7 @@ position would be indicated by higher magnitude ratings for data points
 at \emph{high} physical positions (mirroring the finding for conventional
 charts). Alternatively, use of position relative to blank space would be
 indicated by higher magnitude ratings for data points at \emph{low} physical
-positions (the reverse of the finding for conventional charts).
+positions (the reverse of the finding for conventional charts). Experimental code, materials and a link to run the experiment are available at \url{https://gitlab.pavlovia.org/ExPrag_UoM/riskE3}.
 
 \hypertarget{method-1}{%
 \subsection{Method}\label{method-1}}
@@ -973,7 +973,7 @@ in all charts, including practice trials. There were 60 trials in total
 \hypertarget{procedure-2}{%
 \subsubsection{Procedure}\label{procedure-2}}
 
-The experiment was programmed in PsychoPy (version 2021.2.3 \citet{peirce_psychopy2_2019}). As in E2, participants were asked to indicate their education level. One
+The experiment used PsychoPy version 2021.2.3. As in E2, participants were asked to indicate their education level. One
 slide in the instructions explained to participants how charts with
 inverted axes function: \emph{``In all graphs in this experiment, the arrow on
 the `Chance' axis points downwards, meaning the numbers get bigger as

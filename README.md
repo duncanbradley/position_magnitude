@@ -26,7 +26,7 @@ Once the container is running, open your browser and type `localhost:8787` in th
 
 Using RStudio within the Docker container, you may re-create the .pdf version of the manuscript by opening `position_magnitude.Rmd` and pressing the 'Knit' button, which will execute the code used to generate the .pdf. 
 
-**IMPORTANT:** Computationally intensive models have been cached to ameliorate performance, but the cache will not be recognised automatically when using RStudio within the Docker container. Therefore, `eval_models` must be set to `FALSE` in the `eval-models` code chunk. This will prevent `knitr` from executing the code for each model, but will 'lazyload' all cached models so they can be used in manuscript generation.
+**IMPORTANT:** Computationally intensive models have been cached to ameliorate performance. The cache will not be recognised *automatically* when using RStudio within the Docker container. `eval_models` must be set to `FALSE` in the `eval-models` code chunk. This will prevent `knitr` from executing the code for each model, but will 'lazyload' all cached models so they can be used in manuscript generation.
 
 Files used in manuscript generation:
 
@@ -39,11 +39,11 @@ Files used in manuscript generation:
   + `bib_styles` folder for bibliography formatting styles
   + `makefile` and `vgtc.cls` for output rendering
 
-Knitting `position_magnitude.Rmd` will output `position_magntude.pdf`.
+Knitting `position_magnitude.Rmd` will output `position_magntude.pdf`. This will take some time as additional LaTeX files will be downloaded within the session.
 
 ## Experiment Code and Materials
 
-The experimental code and materials, plus links to run the experiments in your browser, are available here:
+The experimental code and materials, plus links to run the experiments, are available here:
 
 - Experiment 1: https://gitlab.pavlovia.org/ExPrag_UoM/riskE1
 - Experiment 2: https://gitlab.pavlovia.org/ExPrag_UoM/riskE2

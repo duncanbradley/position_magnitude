@@ -32,4 +32,5 @@ RUN R -e "devtools::install_version('insight', version = '0.15.0', dependencies 
 RUN R -e "devtools::install_version('bookdown', version = '0.24', dependencies = T)"
 RUN R -e "devtools::install_version('qwraps2', version = '0.5.2', dependencies = T)"
 RUN R -e "devtools::install_github('crsh/papaja')"
-
+RUN R -e "devtools::install_version('broom', version = '0.7.10', dependencies = T)"
+RUN R -e "devtools::install_version('kableExtra', version = '1.3.4', dependencies = T)"

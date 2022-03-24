@@ -26,7 +26,7 @@ Once the container is running, open your browser and type `localhost:8787` in th
 
 Using RStudio within the Docker container, you may re-create the .pdf version of the manuscript by opening `position_magnitude.Rmd` and pressing the 'Knit' button, which will execute the code used to generate the .pdf. 
 
-**IMPORTANT:** Computationally expensive models have been cached to ameliorate performance, but the cache will not be recognised automatically when using RStudio within the Docker container. Therefore, `eval_models` must be set to `FALSE` in the `eval-models` code chunk. This will prevent `knitr` from executing the code for each model, but will 'lazyload' all cached models so they can be used in manuscript generation.
+**IMPORTANT:** Computationally intensive models have been cached to ameliorate performance, but the cache will not be recognised automatically when using RStudio within the Docker container. Therefore, `eval_models` must be set to `FALSE` in the `eval-models` code chunk. This will prevent `knitr` from executing the code for each model, but will 'lazyload' all cached models so they can be used in manuscript generation.
 
 Files used in manuscript generation:
 

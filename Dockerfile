@@ -5,7 +5,7 @@ FROM rocker/verse:4.1.2
 # Add our files to container
 
 ADD data/ /home/rstudio/data/
-ADD figures/ /home/rstudio/figures/
+ADD images/ /home/rstudio/images/
 ADD position_magnitude.Rmd /home/rstudio/
 ADD position_magnitude.Rproj /home/rstudio/
 ADD position_magnitude_cache/ /home/rstudio/position_magnitude_cache/
@@ -13,6 +13,7 @@ ADD template.tex /home/rstudio/
 ADD makefile /home/rstudio/
 ADD vgtc.cls /home/rstudio/
 ADD bib_styles/ /home/rstudio/bib_styles/
+ADD bibliography.bib /home/rstudio/
 
 # Add appropriate versions of required R packages to container
 

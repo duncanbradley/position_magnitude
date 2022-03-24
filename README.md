@@ -10,7 +10,7 @@ The R script `anonymisation.R` was used for all essential pre-processing: genera
 
 ### Analysis Within a Fully-Reproducible Computational Environment
 
-This recreates the computational environment (R version, package versions) used for all data wrangling, data visualization, statistical modelling, and reporting. 
+We provide resources for re-creating the computational environment (R version, package versions) used for all data wrangling, data visualization, statistical modelling, and reporting. 
 
 First, clone this GitHub repository to your local machine. With Docker running in the background, use a terminal to navigate to the new repository on your local machine and type the following Docker command:
 
